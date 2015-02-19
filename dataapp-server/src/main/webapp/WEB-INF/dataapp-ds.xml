@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://www.ironjacamar.org/doc/schema'
+    xsi:schemaLocation='http://www.ironjacamar.org/doc/schema http://www.ironjacamar.org/doc/schema/datasources_1_1.xsd'>
+    <datasource jta="true" jndi-name="java:/jdbc/dataapp" pool-name="DataAppDS" enabled="true" use-ccm="true">
+        <connection-url>jdbc:derby://localhost:1527/dataapp</connection-url>
+        <driver-class>org.apache.derby.jdbc.ClientDriver</driver-class>
+        <driver>derby</driver>
+        <security>
+            <user-name>dataapp</user-name>
+            <password>dataapp</password>
+        </security>
+        <validation>
+            <validate-on-match>false</validate-on-match>
+            <background-validation>false</background-validation>
+        </validation>
+        <timeout>
+            <set-tx-query-timeout>false</set-tx-query-timeout>
+            <blocking-timeout-millis>0</blocking-timeout-millis>
+            <idle-timeout-minutes>0</idle-timeout-minutes>
+            <query-timeout>0</query-timeout>
+            <use-try-lock>0</use-try-lock>
+            <allocation-retry>0</allocation-retry>
+            <allocation-retry-wait-millis>0</allocation-retry-wait-millis>
+        </timeout>
+        <statement>
+            <share-prepared-statements>false</share-prepared-statements>
+        </statement>
+    </datasource>
+
+</datasources>
