@@ -9,7 +9,7 @@ Setting up the project:
 2. Build the main project with Maven.
 3. Make sure Derby is running.
 4. Run the dataapp-loader project which creates the database, then loads some data into it.
-5. Install the Derby JDBC driver into Wildfly (if it's not done already):
+5. Install the Derby JDBC driver into Wildfly:
 5.1 Start the web server
 5.2 Connect to it by running <Wildfly installation dir>\bin\jboss-cli.bat or jboss-cli.sh if you're on Linux
 5.3 Then execute the following commands:
