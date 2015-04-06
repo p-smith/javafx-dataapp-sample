@@ -65,11 +65,8 @@ public class LiveMapLocate {
     //range of longitude
     private static final double rangeLong = usLongitudeMaximum - usLongitudeOrigin;
     //range of latitude
-    private static final double rangeLat = usLatitudeMaximum - usLatitudeOrigin ; 
-    
-    //instance variables
-    final private double rangeX;
-    final private double rangeY;
+    private static final double rangeLat = usLatitudeMaximum - usLatitudeOrigin ;
+
     final private double scaleLongToX;
     final private double scaleLatToY;
     
@@ -113,12 +110,12 @@ public class LiveMapLocate {
     
     
     public LiveMapLocate(Group group, Bounds bounds){
+
+        double rangeX = bounds.getMinX() - bounds.getMaxX();
+        double rangeY = bounds.getMinY() - bounds.getMaxY();
         
-        rangeX = bounds.getMinX() - bounds.getMaxX();
-        rangeY = bounds.getMinY() - bounds.getMaxY();
-        
-        scaleLongToX = rangeX/rangeLong;
-        scaleLatToY = rangeY/rangeLat;
+        scaleLongToX = rangeX /rangeLong;
+        scaleLatToY = rangeY /rangeLat;
         
         this.bounds = bounds;
         this.group = group;

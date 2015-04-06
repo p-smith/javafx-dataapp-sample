@@ -168,9 +168,6 @@ public class CumulativeLiveSalesFacadeREST {
     
 //end region
     
-    public CumulativeLiveSalesFacadeREST() { 
-    }
-   
     protected EntityManager getEntityManager() {
         return em;
     }
@@ -275,39 +272,10 @@ public class CumulativeLiveSalesFacadeREST {
         
         DIFF = (System.currentTimeMillis() - START_TIME);
         System.out.println("    TOTAL TIME = "+DIFF+"ms");
-        
-        
+
         return result;
     }
-    
-//    @GET
-//    @Path("/product/{from}/{to}")
-//    @Produces({"application/xml", "application/json"})
-//    public List<ProductTransitCumulativeSales> findProductRange(@PathParam("from") String from, @PathParam("to") String to) throws ParseException {
-//        Date dFrom = new Date(from);
-//        Date dTo = new Date(to);
-//        Query q = getEntityManager().createQuery(PRODUCT_SUM_QUERY);
-//        Parameter<Date> p1 = q.getParameter("date1", Date.class);
-//        q.setParameter(p1, dFrom);
-//        Parameter<Date> p2 = q.getParameter("date2", Date.class);
-//        q.setParameter(p2, dTo);
-//        
-//        List<ProductTransitCumulativeSales> result = new ArrayList<ProductTransitCumulativeSales>();
-//        List<Object[]> resultList = q.getResultList();
-//        
-//        
-//        for (int i=0; i < resultList.size(); i++){
-//            Object o[] = resultList.get(i);
-//            ProductTransitCumulativeSales t = new ProductTransitCumulativeSales();
-//            t.setCost((Double)o[0]);
-//            t.setSales((Double) o[1]);
-//            t.setUnits((Long) o[2]);
-//            t.setProduct((Product) o[3]);
-//            result.add(t);
-//        }
-//        return result;
-//    }
-    
+
     @GET
     @Path("/region/{from}/{to}")
     @Produces({"application/xml", "application/json"})
@@ -322,8 +290,7 @@ public class CumulativeLiveSalesFacadeREST {
         
         List<RegionTransitCumulativeSales> result = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
-        
-        
+
         for (Object[] o : resultList) {
             RegionTransitCumulativeSales t = new RegionTransitCumulativeSales();
             t.setCost((Double)o[0]);
@@ -380,8 +347,7 @@ public class CumulativeLiveSalesFacadeREST {
         
         List<StateTransitCumulativeSales> result = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
-        
-        
+
         for (Object[] o : resultList) {
             StateTransitCumulativeSales t = new StateTransitCumulativeSales();
             t.setCost((Double)o[0]);
@@ -461,8 +427,7 @@ public class CumulativeLiveSalesFacadeREST {
         
         DIFF = (System.currentTimeMillis() - START_TIME);
         System.out.println("    TOTAL TIME = "+DIFF+"ms");
-        
-        
+
         return result;
     }
 }

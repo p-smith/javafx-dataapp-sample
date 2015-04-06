@@ -85,8 +85,7 @@ public class LiveSalesListFacadeREST extends AbstractFacade<LiveSalesList> {
     @GET
     @Path("{id}")
     @Produces({"application/xml", "application/json"})
-    public LiveSalesList find(@PathParam("id")
-    Integer id) {
+    public LiveSalesList find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 

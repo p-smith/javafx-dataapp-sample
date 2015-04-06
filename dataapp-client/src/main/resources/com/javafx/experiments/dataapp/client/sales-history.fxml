@@ -30,20 +30,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.collections.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
+
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.transform.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
- 
 <GridPane xmlns:fx="http://javafx.com/fxml">
     <children>
        <Button text="AAA" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2"/>

@@ -55,9 +55,9 @@ public class SeriesChartTableCellFactory implements Callback<TableColumn<Product
     
     private static class SeriesChartTableCell extends TableCell<ProductTypeTransitCumulativeSeriesSales, List<Double>> {
 
-        NumberAxis xAxis;
-        NumberAxis yAxis;
-        AreaChart<Number, Number> chart;
+        final NumberAxis xAxis;
+        final NumberAxis yAxis;
+        final AreaChart<Number, Number> chart;
 
         public SeriesChartTableCell() {
             super();

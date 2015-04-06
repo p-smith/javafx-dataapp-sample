@@ -81,15 +81,15 @@ public class SalesSimulator {
     
     public static final List<Integer> US_REGIONS = Arrays.asList(1,2,3,4,5,6,7);
     
-    public static double US_SALE_PCT = .55;
+    public static final double US_SALE_PCT = .55;
     
-    public static int FLEET_SALES_SIZE = 30;
-    public static double FLEET_SALES_PCT = (1.0/70.0);
+    public static final int FLEET_SALES_SIZE = 30;
+    public static final double FLEET_SALES_PCT = (1.0/70.0);
 
     private static List<ZipCityInfo> listOfZips;
     
     //sell a car every 6.5 seconds
-    public static int TIME_BETWEEN_SALES = 6500;
+    public static final int TIME_BETWEEN_SALES = 6500;
     
     private final EntityManager em;
     
@@ -98,7 +98,7 @@ public class SalesSimulator {
     private final List<Region> usRegions;
     private final List<Region> intlRegions;
     
-    Random thisRandom;
+    final Random thisRandom;
     
     public SalesSimulator(EntityManager em){
         this.em = em;
@@ -109,8 +109,8 @@ public class SalesSimulator {
         TypedQuery<ZipCityInfo> q = em.createNamedQuery("ZipCityInfo.findAll", ZipCityInfo.class);
         listOfZips = q.getResultList();
         
-        usRegions= new ArrayList<>();
-        intlRegions= new ArrayList<>();
+        usRegions = new ArrayList<>();
+        intlRegions = new ArrayList<>();
         
         generateRegionLists();
     }
@@ -178,8 +178,7 @@ public class SalesSimulator {
             if (currentDay != day) {
                 day = currentDay;
                 System.out.println("        Generated data for the day: ["+DATE_FORMAT.format(cal.getTime())+"]");
-                
-                
+
                 dailySalesRate = (TIME_BETWEEN_SALES * (1+salesRateAdjustment(d.longValue(), thisRandom)));
                 salesPctAdjustment();
                 //this flush works specifically with the InitialLoadEntityManagerProxy to ensure
@@ -194,8 +193,6 @@ public class SalesSimulator {
             }
             
             generate(new Date(d.longValue()));
-            
-            
         }
         em.flush();
         et.commit();

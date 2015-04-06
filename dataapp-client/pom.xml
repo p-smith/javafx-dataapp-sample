@@ -8,7 +8,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.javafx.experiments</groupId>
     <artifactId>dataapp-client</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -119,10 +118,11 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <compilerArguments>
-                        <bootclasspath>${sun.boot.class.path}${path.separator}${java.home}/lib/jfxrt.jar</bootclasspath>
-                        <!--<Xlint:unchecked/>-->
-                    </compilerArguments>
+                    <compilerArgs>
+                        <arg>-bootclasspath</arg>
+                        <arg>${sun.boot.class.path}${path.separator}${java.home}/lib/jfxrt.jar</arg>
+                        <!--<arg>-Xlint:unchecked</arg>-->
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

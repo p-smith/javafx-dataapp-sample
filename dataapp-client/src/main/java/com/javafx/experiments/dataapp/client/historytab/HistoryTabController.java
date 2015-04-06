@@ -115,9 +115,9 @@ public class HistoryTabController implements Runnable, Initializable {
         // set fixed range to start with
         Calendar c = Calendar.getInstance();
         c.clear();
-        c.set(2010, 0, 1, 0, 0, 0);
+        c.set(2010, Calendar.JANUARY, 1, 0, 0, 0);
         xAxis.setLowerBound(convertToDecimalMonth(c));
-        c.set(2012, 0, 1, 0, 0, 0);
+        c.set(2012, Calendar.JANUARY, 1, 0, 0, 0);
         xAxis.setUpperBound(convertToDecimalMonth(c));
         // set major tick marks every month
         xAxis.setTickUnit(1);

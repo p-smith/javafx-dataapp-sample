@@ -78,7 +78,7 @@ public class DataAppLoader {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         cal.clear();
-        cal.set(year-1, 0, 1, 0, 0, 0); // go back to begining of year, 3 years ago
+        cal.set(year-1, Calendar.JANUARY, 1, 0, 0, 0); // go back to begining of year, 3 years ago
         System.out.println("Creating historical data...");
         System.out.println("        This may take 5 to 15min depending on machine speed.");
         simulator.run(cal.getTime(), new Date());
@@ -103,10 +103,7 @@ public class DataAppLoader {
         entityManager.persist(dr3);
         entityManager.persist(dr4);
     }
-    
-    public static void loadCustomer() {
-    }
-    
+
     @PersistenceContext
     public static void loadRegion(EntityManager entityManager){
         //Region r = new Region(Integer.SIZE, international, startZone, endZone)
@@ -122,21 +119,18 @@ public class DataAppLoader {
         final int[] internationalEndZones = {25, 50, 75, 99};
         
         for (int i=0; i < domesticNames.length; i++) {
-            Region r = new Region(new Integer(i+1), new Short("0"), domesticStartZones[i], domesticEndZones[i]);
+            Region r = new Region(i + 1, new Short("0"), domesticStartZones[i], domesticEndZones[i]);
             r.setName(domesticNames[i]);
             entityManager.persist(r);
         }
         for (int i=0; i < internationalNames.length; i++) {
-            Region r = new Region(new Integer(domesticNames.length + i + 1), new Short("1"), internationalStartZones[i], internationalEndZones[i]);
+            Region r = new Region(domesticNames.length + i + 1, new Short("1"), internationalStartZones[i], internationalEndZones[i]);
             r.setName(internationalNames[i]);
             entityManager.persist(r);
         }
 
     }
-    
-    public static void loadDealer() {
-    }
-    
+
     @PersistenceContext
     public static void loadRole(EntityManager entityManager) {
         Role r = new Role('E');
@@ -155,10 +149,7 @@ public class DataAppLoader {
         r.setDescription("Sales, Associate");
         entityManager.persist(r);
     }
-    
-    public static void loadEmployeee() {
-    }
-    
+
     public static void loadEngine(EntityManager entityManager) {
         //I4
         Engine e0 = new Engine(1);
@@ -1586,16 +1577,7 @@ public class DataAppLoader {
               
         entityManager.persist(pc63);
     }
-    
-    public static void loadProjectedSales() {
-    }
-        
-    public static void loadSalesOrderLine() {
-    }
-    
-    public static void loadSalesOrder() {
-    }
-    
+
     public static void readFullProductListing(EntityManager entityManager){
         Query namedQuery = entityManager.createNamedQuery("FullProductListing.findAll");
         List products = namedQuery.getResultList();

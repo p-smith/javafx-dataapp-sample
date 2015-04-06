@@ -56,7 +56,7 @@ public class DataApplication extends Application {
     public static final String SERVER_URI = "http://localhost:8080/DataAppServer/resources";
     private static final ObservableList<Object> americanRegions = FXCollections.observableArrayList();
     private static final ObservableList<Object> productTypes = FXCollections.observableArrayList();
-    private static final Vector<Runnable> dataLoadingTasks = new Vector<Runnable>();
+    private static final Vector<Runnable> dataLoadingTasks = new Vector<>();
     private Parent root;
 
     @Override public void init() throws Exception {

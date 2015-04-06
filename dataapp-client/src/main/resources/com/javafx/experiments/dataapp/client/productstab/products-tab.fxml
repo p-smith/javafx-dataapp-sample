@@ -30,13 +30,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import java.text.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.control.cell.*?>
-<?import com.javafx.experiments.dataapp.client.util.FormatedTableCellFactory?>
 
+<?import com.javafx.experiments.dataapp.client.util.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.control.*?>
+<?import java.text.NumberFormat?>
 <Tab text="Product Listings" fx:controller="com.javafx.experiments.dataapp.client.productstab.ProductsTabController" xmlns:fx="http://javafx.com/fxml">
     <content>
         <TableView fx:id="productsTable">

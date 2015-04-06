@@ -30,28 +30,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import java.text.*?>
-<?import javafx.collections.*?>
-<?import javafx.collections.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.control.cell.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.transform.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import com.javafx.experiments.dataapp.client.historytab.TimeRangeSelector?>
-<?import com.javafx.experiments.dataapp.client.historytab.SeriesChartTableCellFactory?>
-<?import com.javafx.experiments.dataapp.client.util.FormatedTableCellFactory?>
 
+<?import com.javafx.experiments.dataapp.client.historytab.SeriesChartTableCellFactory?>
+<?import com.javafx.experiments.dataapp.client.historytab.TimeRangeSelector?>
+<?import com.javafx.experiments.dataapp.client.util.FormatedTableCellFactory?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import java.text.NumberFormat?>
 <Tab text="Sales History" fx:id="historyTab" fx:controller="com.javafx.experiments.dataapp.client.historytab.HistoryTabController" xmlns:fx="http://javafx.com/fxml">
     <content>
         <GridPane id="HistoryTab">

@@ -43,26 +43,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
-
 import java.util.Collection;
 
-/**
- *
- */
 public class TimeRangeSelector extends Region {
-    //private final static double HANDLE_PLOT_GAP = 5;
-    private NumberAxis xAxis = new NumberAxis();
+    private final NumberAxis xAxis = new NumberAxis();
     private final NumberAxis yAxis = new NumberAxis();
     private final AreaChart<Number,Number> chart = new AreaChart<>(xAxis,yAxis);
-    private Handle startHandle = new Handle();
-    private Handle endHandle = new Handle();
-    private double chartPlotX, chartPlotY, dragOffset;
+    private final Handle startHandle = new Handle();
+    private final Handle endHandle = new Handle();
+    private double chartPlotX, dragOffset;
     private Runnable dateChangeListener;
     
-    private DoubleProperty startValue =  new SimpleDoubleProperty(10) {
+    private final DoubleProperty startValue = new SimpleDoubleProperty(10) {
         @Override protected void invalidated() { requestLayout(); }
     };
-    private DoubleProperty endValue =  new SimpleDoubleProperty(20) {
+    private final DoubleProperty endValue = new SimpleDoubleProperty(20) {
         @Override protected void invalidated() { requestLayout(); }
     };
     
@@ -154,7 +149,6 @@ public class TimeRangeSelector extends Region {
     }
 
     @Override protected void layoutChildren() {
-        final double w = getWidth();
         final double h = getHeight();
         // layout chart
         chart.resize(getWidth(), getHeight());
@@ -165,8 +159,6 @@ public class TimeRangeSelector extends Region {
         Node chartPlotArea = chart.lookup(".chart-content");
         chartPlotX = chartPlotArea.getBoundsInParent().getMinX() + 
                 chartPlotBackground.getBoundsInParent().getMinX();
-        chartPlotY = chartPlotArea.getBoundsInParent().getMinY() + 
-                chartPlotBackground.getBoundsInParent().getMinY();
         // calculate X positions for start and end
         final double startXPos = chartPlotX + xAxis.getDisplayPosition(startValue.get());
         final double endXPos = chartPlotX + xAxis.getDisplayPosition(endValue.get());
@@ -183,8 +175,8 @@ public class TimeRangeSelector extends Region {
     }
     
     private class Handle extends Pane {
-        private Pane thumb = new Pane();
-        private Line line = new Line();
+        private final Pane thumb = new Pane();
+        private final Line line = new Line();
         
         public Handle() {
             getStyleClass().add("handle");

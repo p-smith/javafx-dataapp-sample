@@ -60,10 +60,7 @@ public class RaceTrack extends Pane {
             + "c30.963,7.319,65.757-22.646,77.056-69.594c25.107-104.329-3.929-132.62,48.917-174.129"
             + "c42.857-33.663,124.243-10.316,145.022,39.93c23.439,56.679,24.611,96.368,15.898,145.671"
             + "C767.845,280.955,756.952,427.754,636.606,425.946z";
-    
-    private final SVGPath road;
-    private final Group track;
-    private final Group raceCar;
+
     private PathTransition race;
     private Text percentage;
     private final DoubleProperty progress = new SimpleDoubleProperty() {
@@ -80,9 +77,7 @@ public class RaceTrack extends Pane {
     public DoubleProperty progressProperty() { return progress; }
 
     public RaceTrack() {
-        ImageView carImageView = new ImageView(new Image(
-                DataAppPreloader.class.getResourceAsStream("images/car.png")));
-        road = SVGPathBuilder.create()
+        SVGPath road = SVGPathBuilder.create()
                 .content(trackPath).fill(null).stroke(Color.gray(0.4))
                 .strokeWidth(50)
                 .effect(DropShadowBuilder.create().radius(20).blurType(BlurType.ONE_PASS_BOX).build())
@@ -106,9 +101,9 @@ public class RaceTrack extends Pane {
         raceCarImg.setX(raceCarImg.getImage().getWidth()/2);
         raceCarImg.setY(raceCarImg.getImage().getHeight()/2);
         raceCarImg.setRotate(90);
-        raceCar = new Group(raceCarImg);
-        
-        track = new Group(road, trackLine, startLine, startFinish);
+        Group raceCar = new Group(raceCarImg);
+
+        Group track = new Group(road, trackLine, startLine, startFinish);
         track.setCache(true);
         // add children
         getChildren().addAll(track, raceCar, percentage);

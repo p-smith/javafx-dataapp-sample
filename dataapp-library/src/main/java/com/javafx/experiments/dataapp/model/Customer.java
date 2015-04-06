@@ -141,10 +141,7 @@ public class Customer implements Serializable {
             return false;
         }
         Customer other = (Customer) object;
-        if ((this.customerId == null && other.customerId != null) || (this.customerId != null && !this.customerId.equals(other.customerId))) {
-            return false;
-        }
-        return true;
+        return !((this.customerId == null && other.customerId != null) || (this.customerId != null && !this.customerId.equals(other.customerId)));
     }
 
     @Override

@@ -8,7 +8,6 @@
       <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.javafx.experiments</groupId>
     <artifactId>dataapp-preloader</artifactId>
     <packaging>jar</packaging>
 

@@ -57,9 +57,7 @@ import javafx.util.Duration;
 public class DataAppPreloader extends Preloader  {
     private static boolean DEMO_MODE = false;
     private StackPane root;
-    private StackPane background;
     private Scene preloaderScene;
-    private Stage preloaderStage;
     private RaceTrack raceTrack;
     private Timeline simulatorTimeline;
 
@@ -76,7 +74,7 @@ public class DataAppPreloader extends Preloader  {
     @Override public void init() throws Exception {
         DEMO_MODE = true;
         root = new StackPane();
-        background = new StackPane();
+        StackPane background = new StackPane();
         background.setId("Window");
         background.setCache(true);
         ImageView carImageView = new ImageView(new Image(
@@ -93,9 +91,8 @@ public class DataAppPreloader extends Preloader  {
     }
     
     @Override public void start(Stage stage) throws Exception {
-        preloaderStage = stage;
-        preloaderStage.setScene(preloaderScene);
-        preloaderStage.show();
+        stage.setScene(preloaderScene);
+        stage.show();
         
         if (DEMO_MODE) {
             final DoubleProperty prog = new SimpleDoubleProperty(0){

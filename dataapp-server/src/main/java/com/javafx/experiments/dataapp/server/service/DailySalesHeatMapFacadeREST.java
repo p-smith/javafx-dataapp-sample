@@ -81,9 +81,6 @@ public class DailySalesHeatMapFacadeREST {
     
     private static final String RANGE_QUERY = "select max(d.date), min(d.date) from DailySales d ";
 
-    public DailySalesHeatMapFacadeREST() {
-    }
-
     private HashMap<String, Long> runBaseQuery(Date date){
         Calendar cal = Calendar.getInstance();
         long DIFF, TIME = System.currentTimeMillis();

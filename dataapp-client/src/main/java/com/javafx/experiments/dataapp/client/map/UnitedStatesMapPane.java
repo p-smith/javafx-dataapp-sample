@@ -62,9 +62,7 @@ public class UnitedStatesMapPane extends Region {
     private final Group overlayGroup = new Group();
     private Group statesGroup;
     private Group regionGroup;
-    private double lastWidth = -1, lastHeight = -1;
     private double zoomedInScale = 1;
-    
 
     public UnitedStatesMapPane() {
         getStyleClass().add("map-pane");
@@ -260,6 +258,8 @@ public class UnitedStatesMapPane extends Region {
     }
 
     @Override protected void layoutChildren() {
+        double lastWidth = -1;
+        double lastHeight = -1;
         if (getWidth() != lastWidth || getHeight() != lastHeight) {
             final double w = getWidth() - getInsets().getLeft() - getInsets().getRight();
             final double h = getHeight() - getInsets().getTop() - getInsets().getBottom();

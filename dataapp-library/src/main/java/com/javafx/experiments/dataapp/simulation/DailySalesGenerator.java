@@ -95,11 +95,11 @@ public class DailySalesGenerator {
         List<Object[]> results = baseQuery.getResultList();
         for (Object[] result : results){
             DailySales hourlySales = new DailySales();
-            Region region = em.find(Region.class, (Integer)result[0]);
+            Region region = em.find(Region.class, result[0]);
             hourlySales.setRegion(region);
             //hourlySales.setEmployeeId(null);
             //hourlySales.setDealerId(null);
-            Product product = em.find(Product.class, (Integer)result[1]);
+            Product product = em.find(Product.class, result[1]);
             hourlySales.setProduct(product);
             hourlySales.setStateProvCd((String)result[2]);
             hourlySales.setQuantity(((Long)result[3]).intValue());
