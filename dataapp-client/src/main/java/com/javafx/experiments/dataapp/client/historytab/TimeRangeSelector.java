@@ -36,11 +36,15 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.chart.*;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
+
+import java.util.Collection;
 
 /**
  *
@@ -62,7 +66,7 @@ public class TimeRangeSelector extends Region {
         @Override protected void invalidated() { requestLayout(); }
     };
     
-    public void setData(XYChart.Series<Number, Number> ... data) {
+    public void setData(Collection<XYChart.Series<Number, Number>> data) {
         chart.getData().addAll(data);
     }
     

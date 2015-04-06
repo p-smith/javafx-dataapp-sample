@@ -37,10 +37,11 @@ import com.javafx.experiments.dataapp.model.transit.ProductTypeTransitCumulative
 import com.javafx.experiments.dataapp.model.transit.RegionTransitCumulativeSales;
 import com.javafx.experiments.dataapp.model.transit.StateTransitCumulativeSales;
 import com.javafx.experiments.dataapp.model.transit.TransitCumulativeSales;
-import java.util.concurrent.atomic.AtomicReference;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.util.Pair;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 class GetSaleService extends Service<Pair<ProductTypeTransitCumulativeSeriesSales[], TransitCumulativeSales[]>> {
     private final CumulativeLiveSalesClient clsClient;
@@ -89,7 +90,7 @@ class GetSaleService extends Service<Pair<ProductTypeTransitCumulativeSeriesSale
                         return null;
                     }
                 }
-                return new Pair(productResults, regionOrStateResults);
+                return new Pair<>(productResults, regionOrStateResults);
             }
         };
     }

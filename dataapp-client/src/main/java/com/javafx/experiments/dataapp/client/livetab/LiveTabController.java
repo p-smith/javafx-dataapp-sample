@@ -33,17 +33,15 @@ package com.javafx.experiments.dataapp.client.livetab;
 
 import com.javafx.experiments.dataapp.client.DataApplication;
 import com.javafx.experiments.dataapp.client.map.UnitedStatesMapPane;
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.javafx.experiments.dataapp.model.LiveSalesList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Controller for the Live Data Tab of the car sales application
@@ -51,9 +49,9 @@ import javafx.scene.control.TableView;
 public class LiveTabController implements Initializable {
     @FXML public Tab liveTab;
     @FXML public SplitPane liveView;
-    @FXML public ChoiceBox regionChoiceBox;
-    @FXML public ChoiceBox productChoiceBox;
-    @FXML public TableView liveSaleView;
+    @FXML public ChoiceBox<Object> regionChoiceBox;
+    @FXML public ChoiceBox<Object> productChoiceBox;
+    @FXML public TableView<LiveSalesList> liveSaleView;
     @FXML public UnitedStatesMapPane map;
     
     private LiveDataFetcher liveDataFetcher;
@@ -68,7 +66,7 @@ public class LiveTabController implements Initializable {
         productChoiceBox.setItems(DataApplication.getProductTypes());
         productChoiceBox.getSelectionModel().selectFirst();
         // listen for live data filter changes
-        ChangeListener liveDataFilterChangedListener = new ChangeListener() {
+        ChangeListener<Object> liveDataFilterChangedListener = new ChangeListener<Object>() {
             @Override public void changed(ObservableValue ov, Object oldValue, Object newValue) {
                 liveDataFetcher.regionOrProductChanged();
             }

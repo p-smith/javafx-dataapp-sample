@@ -31,18 +31,14 @@
  */
 package com.javafx.experiments.dataapp.simulation;
 
-import com.javafx.experiments.dataapp.model.Product;
-import com.javafx.experiments.dataapp.model.Region;
-import com.javafx.experiments.dataapp.model.SalesOrder;
-import com.javafx.experiments.dataapp.model.SalesOrderLine;
-import com.javafx.experiments.dataapp.model.DailySales;
+import com.javafx.experiments.dataapp.model.*;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Parameter;
+import javax.persistence.TypedQuery;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Parameter;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 public class DailySalesGenerator {
     private final EntityManager em;
@@ -72,7 +68,7 @@ public class DailySalesGenerator {
     
     private static final String REMOVE_QUERY = "select so from SalesOrder so where so.date < :date1";
         
-    Query baseQuery;
+    TypedQuery<Object[]> baseQuery;
     TypedQuery<SalesOrder> removeQuery;
         
     public DailySalesGenerator(EntityManager em){
@@ -83,7 +79,7 @@ public class DailySalesGenerator {
      * Generate a single sales record for the current date and time
      */
     public void run ()  {
-        baseQuery = em.createQuery(BASE_QUERY);
+        baseQuery = em.createQuery(BASE_QUERY, Object[].class);
         removeQuery = em.createQuery(REMOVE_QUERY, SalesOrder.class);
         System.out.println("moving over old sales orders into weekly sales");
         Calendar cal = Calendar.getInstance();

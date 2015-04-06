@@ -38,16 +38,6 @@ import com.javafx.experiments.dataapp.model.ProductType;
 import com.javafx.experiments.dataapp.model.Region;
 import com.javafx.experiments.dataapp.model.transit.HeatMapQuantity;
 import com.javafx.experiments.dataapp.model.transit.HeatMapRange;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -70,6 +60,11 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 /**
  *
  */
@@ -77,9 +72,9 @@ public class HeatTabController implements Initializable {
     @FXML private UnitedStatesMapPane map;
     @FXML private ChoiceBox<Month> compareMonthChoiceBox;
     @FXML private ChoiceBox<Month> toMonthChoiceBox;
-    @FXML private ChoiceBox compareProductChoiceBox;
-    @FXML private ChoiceBox toProductChoiceBox;
-    @FXML private ChoiceBox regionChoiceBox;
+    @FXML private ChoiceBox<Object> compareProductChoiceBox;
+    @FXML private ChoiceBox<Object> toProductChoiceBox;
+    @FXML private ChoiceBox<Object> regionChoiceBox;
     
     private static final Stop[] COLD_COLORS = new Stop[]{
         new Stop(0,     Color.WHITE),
@@ -100,7 +95,7 @@ public class HeatTabController implements Initializable {
         // populate live data regions choicebox
         regionChoiceBox.setItems(DataApplication.getAmericanRegions());
         regionChoiceBox.getSelectionModel().selectFirst();
-        regionChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+        regionChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
             @Override public void changed(ObservableValue ov, Object t, Object newValue) {
                 if (newValue instanceof Region) {
                     Region region = (Region)newValue;
@@ -173,7 +168,7 @@ public class HeatTabController implements Initializable {
         toProductChoiceBox.setItems(DataApplication.getProductTypes());
         toProductChoiceBox.getSelectionModel().selectFirst();
         // listen for selection changes
-        final ChangeListener rangeChangeListener = new ChangeListener() {
+        final ChangeListener<Object> rangeChangeListener = new ChangeListener<Object>() {
             @Override public void changed(ObservableValue ov, Object t, Object t1) {
                 fetchResults();
             }

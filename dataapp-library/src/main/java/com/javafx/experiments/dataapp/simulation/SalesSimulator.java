@@ -31,24 +31,14 @@
  */
 package com.javafx.experiments.dataapp.simulation;
 
-import com.javafx.experiments.dataapp.model.Address;
-import com.javafx.experiments.dataapp.model.Customer;
-import com.javafx.experiments.dataapp.model.DiscountRate;
-import com.javafx.experiments.dataapp.model.Product;
-import com.javafx.experiments.dataapp.model.Region;
-import com.javafx.experiments.dataapp.model.SalesOrder;
-import com.javafx.experiments.dataapp.model.SalesOrderLine;
-import com.javafx.experiments.dataapp.model.ZipCityInfo;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
+import com.javafx.experiments.dataapp.model.*;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.text.DateFormat;
+import java.util.*;
 
 public class SalesSimulator {
     private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance();
@@ -116,16 +106,13 @@ public class SalesSimulator {
         
         thisRandom = new Random();
         
-        Query q = em.createNamedQuery("ZipCityInfo.findAll", ZipCityInfo.class);
+        TypedQuery<ZipCityInfo> q = em.createNamedQuery("ZipCityInfo.findAll", ZipCityInfo.class);
         listOfZips = q.getResultList();
         
         usRegions= new ArrayList<>();
         intlRegions= new ArrayList<>();
         
         generateRegionLists();
-        
-        
-        
     }
     
     private void generateRegionLists() {
@@ -138,7 +125,6 @@ public class SalesSimulator {
                 usRegions.add(r);
             }
         }
-        
     }
     
     /**
@@ -213,7 +199,6 @@ public class SalesSimulator {
         }
         em.flush();
         et.commit();
-        
     }
     
     private void salesPctAdjustment(){
@@ -252,8 +237,6 @@ public class SalesSimulator {
         usUtilityPct = usUtilityPct/sum;
         usPremiumTruckPct = usPremiumTruckPct/sum;
         usMedHeavyTruckPct = usMedHeavyTruckPct/sum;
-        
-        
     }
     
     private static double salesRateAdjustment(long time, Random random){
@@ -271,8 +254,6 @@ public class SalesSimulator {
         }
         
         return rate;
-        
-        
     }
     
     private void generate(Date date) {
@@ -287,7 +268,6 @@ public class SalesSimulator {
                 //System.out.println("Generating a US Consumer sale");
             }
         }
-        
     }
     
     private void doFleetSale(Random random, Date date){
@@ -325,12 +305,8 @@ public class SalesSimulator {
             
             salesToGo = salesToGo - quantity;
         }
-        
-       
     }
-    
-   
-    
+
     private Customer generateCustomer(Random random){
         Customer customer = new Customer();
         customer.setAddress(generateAddress(random));
@@ -382,7 +358,6 @@ public class SalesSimulator {
         orderLine.setProduct(em.find(Product.class, productId));
         orderLine.setQuantity(1);
         em.persist(orderLine);
-        
     }
     
     private Region getRegion(Address address){
@@ -399,8 +374,6 @@ public class SalesSimulator {
         }
         
         return returnRegion;
-        
-        
     }
     
     private int pickRegion(Random random){
@@ -486,4 +459,3 @@ public class SalesSimulator {
     }
     
 }
-

@@ -36,8 +36,6 @@ import com.javafx.experiments.dataapp.client.rest.RegionClient;
 import com.javafx.experiments.dataapp.model.ProductType;
 import com.javafx.experiments.dataapp.model.Region;
 import dataapppreloader.DataAppPreloader.PreloaderHandoverEvent;
-import java.util.Arrays;
-import java.util.Vector;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -48,13 +46,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
+import java.util.Vector;
+
 /**
  * Main Application for the Henley Car Sales Application
  */
 public class DataApplication extends Application {
     public static final String SERVER_URI = "http://localhost:8080/DataAppServer/resources";
-    private static final ObservableList americanRegions = FXCollections.observableArrayList();
-    private static final ObservableList productTypes = FXCollections.observableArrayList();
+    private static final ObservableList<Object> americanRegions = FXCollections.observableArrayList();
+    private static final ObservableList<Object> productTypes = FXCollections.observableArrayList();
     private static final Vector<Runnable> dataLoadingTasks = new Vector<Runnable>();
     private Parent root;
 
@@ -112,11 +113,11 @@ public class DataApplication extends Application {
         dataLoadingTasks.add(task);
     }
 
-    public static ObservableList getAmericanRegions() {
+    public static ObservableList<Object> getAmericanRegions() {
         return americanRegions;
     }
 
-    public static ObservableList getProductTypes() {
+    public static ObservableList<Object> getProductTypes() {
         return productTypes;
     }
     

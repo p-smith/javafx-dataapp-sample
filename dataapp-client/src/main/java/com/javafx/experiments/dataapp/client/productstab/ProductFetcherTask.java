@@ -45,7 +45,7 @@ import javafx.scene.control.TableView;
  */
 public class ProductFetcherTask extends Task<ObservableList<FullProductListing>> {
 
-    public ProductFetcherTask(final TableView products) {
+    public ProductFetcherTask(final TableView<FullProductListing> products) {
         valueProperty().addListener(new ChangeListener<ObservableList<FullProductListing>>() {
             @Override public void changed(ObservableValue<? extends ObservableList<FullProductListing>> ov, 
                     ObservableList<FullProductListing> oldValues, ObservableList<FullProductListing> newValues) {

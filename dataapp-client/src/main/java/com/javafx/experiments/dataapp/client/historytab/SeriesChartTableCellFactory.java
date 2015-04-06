@@ -32,7 +32,6 @@
 package com.javafx.experiments.dataapp.client.historytab;
 
 import com.javafx.experiments.dataapp.model.transit.ProductTypeTransitCumulativeSeriesSales;
-import java.util.List;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -41,6 +40,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Special cell for displaying charts
@@ -105,7 +107,8 @@ public class SeriesChartTableCellFactory implements Callback<TableColumn<Product
                 for (int i = 0; i < item.size(); i++) {
                     salesSeries.getData().add(new XYChart.Data<Number, Number>(i, item.get(i)));
                 }
-                chart.getData().setAll(salesSeries);
+
+                chart.getData().setAll(Collections.singletonList(salesSeries));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }

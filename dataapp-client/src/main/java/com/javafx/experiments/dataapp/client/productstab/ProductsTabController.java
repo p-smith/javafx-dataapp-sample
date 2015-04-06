@@ -32,17 +32,19 @@
 package com.javafx.experiments.dataapp.client.productstab;
 
 import com.javafx.experiments.dataapp.client.DataApplication;
-import java.net.URL;
-import java.util.ResourceBundle;
+import com.javafx.experiments.dataapp.model.FullProductListing;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Controller for the Products Table Tab of the car sales application
  */
 public class ProductsTabController implements Initializable {
-    @FXML public TableView productsTable;
+    @FXML public TableView<FullProductListing> productsTable;
 
     @Override public void initialize(URL url, ResourceBundle rb) {
         // this needs to be run on FX thread 

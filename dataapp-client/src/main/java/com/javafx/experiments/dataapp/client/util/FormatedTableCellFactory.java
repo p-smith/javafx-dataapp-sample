@@ -31,13 +31,14 @@
  */
 package com.javafx.experiments.dataapp.client.util;
 
-import java.text.Format;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
+
+import java.text.Format;
 
 /**
  * Simple TableCellfactory that support setting text alignment and a formatter
@@ -63,8 +64,8 @@ public class FormatedTableCellFactory<S,T> implements Callback<TableColumn<S,T>,
     }
     
     @Override public TableCell<S,T> call(TableColumn<S,T> p) {
-         TableCell<S,T> cell = new TableCell() {
-            @Override public void updateItem(Object item, boolean empty) {
+         TableCell<S,T> cell = new TableCell<S,T>() {
+            @Override public void updateItem(T item, boolean empty) {
                 if (item == getItem()) return;
 
                 super.updateItem(item, empty);

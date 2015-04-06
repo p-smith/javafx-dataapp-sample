@@ -36,12 +36,6 @@ import com.javafx.experiments.dataapp.client.rest.LiveSalesViewClient;
 import com.javafx.experiments.dataapp.model.LiveSalesList;
 import com.javafx.experiments.dataapp.model.ProductType;
 import com.javafx.experiments.dataapp.model.Region;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -59,6 +53,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Fetches the latest sales and fetches new sales every 6 seconds
@@ -83,7 +84,7 @@ public class LiveDataFetcher extends Service<List<LiveSalesList>> {
     private final Group liveDots;
     private final Timeline refreshTimeline;
     
-    public LiveDataFetcher(final TableView liveSales, final UnitedStatesMapPane map, 
+    public LiveDataFetcher(final TableView<LiveSalesList> liveSales, final UnitedStatesMapPane map,
             final ChoiceBox regionChoiceBox, final ChoiceBox productChoiceBox) {
         this.regionChoiceBox = regionChoiceBox;
         this.productChoiceBox = productChoiceBox;

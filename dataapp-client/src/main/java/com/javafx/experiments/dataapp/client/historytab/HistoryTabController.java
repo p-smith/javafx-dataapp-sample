@@ -39,16 +39,6 @@ import com.javafx.experiments.dataapp.model.transit.ProductTypeTransitCumulative
 import com.javafx.experiments.dataapp.model.transit.RegionTransitCumulativeSales;
 import com.javafx.experiments.dataapp.model.transit.StateTransitCumulativeSales;
 import com.javafx.experiments.dataapp.model.transit.TransitCumulativeSales;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -66,6 +56,11 @@ import javafx.scene.control.TableView;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 /**
  * Controller for the History Tab of the car sales application
  */
@@ -78,7 +73,7 @@ public class HistoryTabController implements Runnable, Initializable {
     @FXML public TableView<ProductTypeTransitCumulativeSeriesSales> dataTable;
     @FXML public PieChart pieChart1 = new PieChart();
     @FXML public PieChart pieChart2 = new PieChart();
-    @FXML public ChoiceBox regionChoiceBox; 
+    @FXML public ChoiceBox<Object> regionChoiceBox;
     
     private final ObservableList<ProductTypeTransitCumulativeSeriesSales> dataTableData = FXCollections.observableArrayList();
     private final HashMap<ProductType, PieChart.Data> pieData1 = new HashMap<>();
@@ -97,7 +92,8 @@ public class HistoryTabController implements Runnable, Initializable {
         // init time range selector
         final XYChart.Series<Number, Number> salesSeries = new XYChart.Series<>();
         final XYChart.Series<Number, Number> costsSeries = new XYChart.Series<>();
-        timeRangeSelector.setData(salesSeries, costsSeries);
+
+        timeRangeSelector.setData(Arrays.asList(salesSeries, costsSeries));
         // configure xAxis
         xAxis = (NumberAxis)timeRangeSelector.getChart().getXAxis();
         xAxis.setAutoRanging(false);
@@ -131,7 +127,7 @@ public class HistoryTabController implements Runnable, Initializable {
         //init regionbox
         regionChoiceBox.setItems(DataApplication.getAmericanRegions());
         regionChoiceBox.getSelectionModel().selectFirst();
-        regionChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+        regionChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
             @Override public void changed(ObservableValue ov, Object oldValue, Object newValue) {
                 getSalesService.setRegionSelection(newValue);
                 pieChart2.getData().clear();
