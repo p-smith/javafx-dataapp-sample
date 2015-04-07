@@ -118,11 +118,9 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <compilerArgs>
-                        <arg>-bootclasspath</arg>
-                        <arg>${sun.boot.class.path}${path.separator}${java.home}/lib/jfxrt.jar</arg>
-                        <!--<arg>-Xlint:unchecked</arg>-->
-                    </compilerArgs>
+                    <compilerArguments>
+                        <bootclasspath>${sun.boot.class.path}${path.separator}${java.home}/lib/jfxrt.jar</bootclasspath>
+                    </compilerArguments>
                 </configuration>
             </plugin>
             <plugin>
