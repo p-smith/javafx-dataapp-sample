@@ -42,7 +42,6 @@
                     <target>1.7</target>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
-<!--                        <Xlint:unchecked></Xlint:unchecked>-->
                     </compilerArguments>
                 </configuration>
             </plugin>
