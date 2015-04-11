@@ -31,116 +31,95 @@
  */
 package com.javafx.experiments.dataapp.simulation.persistance;
 
-import com.javafx.experiments.dataapp.model.DailySales;
-import com.javafx.experiments.dataapp.model.Product;
-import com.javafx.experiments.dataapp.model.Region;
-import com.javafx.experiments.dataapp.model.SalesOrder;
-import com.javafx.experiments.dataapp.model.SalesOrderLine;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
-import javax.persistence.StoredProcedureQuery;
-import javax.persistence.TypedQuery;
+import com.javafx.experiments.dataapp.model.*;
+
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.metamodel.Metamodel;
+import java.util.*;
 
 /**
  * This class acts as a proxy for an entity manager and should ONLY be used on an
  * load scenario with the goal of generating DailySales. The general idea is that persist only 'persists' sales
  * order lines in an accumulation that corresponds to an entry in the DailySales.
- * 
+ * <p/>
  * Flush should be called at the end of every day, to insure that the ids generated
- * in the daily sales table are correct. 
- * 
+ * in the daily sales table are correct.
+ * <p/>
  * This proxy is a bit of a hack but allows us to use the current Persistence heavy
  * framework of the SalesSimulator without changing the code.
  */
 public class InitialLoadEntityManagerProxy implements EntityManager {
 
     private final EntityManager em;
-    
+
     //Accumulates daily sales to be persisted out to the database.
-    private TreeMap<Date, HashMap<Product, HashMap<String, HashMap<Region,Integer>>>> dailySalesCounter;
-    
-    public InitialLoadEntityManagerProxy (EntityManager em ){
+    private TreeMap<Date, HashMap<Product, HashMap<String, HashMap<Region, Integer>>>> dailySalesCounter;
+
+    public InitialLoadEntityManagerProxy(EntityManager em) {
         this.em = em;
-        
+
         this.dailySalesCounter = new TreeMap<>();
     }
-    
+
     @Override
     public void persist(Object o) {
-        if (o instanceof SalesOrderLine){
+        if (o instanceof SalesOrderLine) {
             doBlackMagic((SalesOrderLine) o);
         }
     }
-    
-    private void doBlackMagic(SalesOrderLine sol){
+
+    private void doBlackMagic(SalesOrderLine sol) {
         SalesOrder so = sol.getOrder();
 
         //all we care about is the day the sale happened
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(so.getDate().getTime());
         cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE,0);
-        cal.set(Calendar.SECOND,0);
-        cal.set(Calendar.MILLISECOND,0);
-        
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
         Date date = cal.getTime();
-        
-        if (!dailySalesCounter.containsKey(date)){
+
+        if (!dailySalesCounter.containsKey(date)) {
             dailySalesCounter.put(date, new HashMap<Product, HashMap<String, HashMap<Region, Integer>>>());
         }
-        if (!dailySalesCounter.get(date).containsKey(sol.getProduct())){
+        if (!dailySalesCounter.get(date).containsKey(sol.getProduct())) {
             dailySalesCounter.get(date).put(sol.getProduct(), new HashMap<String, HashMap<Region, Integer>>());
         }
-        if (!dailySalesCounter.get(date).get(sol.getProduct()).containsKey(so.getCustomer().getAddress().getStateProvCd())){
-            dailySalesCounter.get(date).get(sol.getProduct()).put(so.getCustomer().getAddress().getStateProvCd(), new HashMap<Region,Integer>());
+        if (!dailySalesCounter.get(date).get(sol.getProduct()).containsKey(so.getCustomer().getAddress().getStateProvCd())) {
+            dailySalesCounter.get(date).get(sol.getProduct()).put(so.getCustomer().getAddress().getStateProvCd(), new HashMap<Region, Integer>());
         }
-        if (!dailySalesCounter.get(date).get(sol.getProduct()).get(so.getCustomer().getAddress().getStateProvCd()).containsKey(so.getRegion())){
+        if (!dailySalesCounter.get(date).get(sol.getProduct()).get(so.getCustomer().getAddress().getStateProvCd()).containsKey(so.getRegion())) {
             dailySalesCounter.get(date).get(sol.getProduct()).get(so.getCustomer().getAddress().getStateProvCd()).put(so.getRegion(), sol.getQuantity());
-        }
-        else{
+        } else {
             Integer quantity = dailySalesCounter.get(date).get(sol.getProduct()).get(so.getCustomer().getAddress().getStateProvCd()).put(so.getRegion(), sol.getQuantity());
             quantity = quantity + sol.getQuantity();
             dailySalesCounter.get(date).get(sol.getProduct()).get(so.getCustomer().getAddress().getStateProvCd()).put(so.getRegion(), quantity);
         }
-       
-        
-
     }
-    
-    private void persistBlackMagic() {
-        for (Date date : dailySalesCounter.keySet()){
-                    for (Product product : dailySalesCounter.get(date).keySet()){
-                        for (String state : dailySalesCounter.get(date).get(product).keySet()){
-                            for (Region region : dailySalesCounter.get(date).get(product).get(state).keySet()){
-                                DailySales dailySales = new DailySales();
-                                dailySales.setRegion(region);
-                                dailySales.setProduct(product);
-                                dailySales.setStateProvCd(state);
-                                dailySales.setQuantity(dailySalesCounter.get(date).get(product).get(state).get(region));
-                                dailySales.setDate(date);
-                                em.persist(dailySales);
-                            }
-                        }
-            }
-        System.out.println(date);
-        }
 
+    private void persistBlackMagic() {
+        for (Date date : dailySalesCounter.keySet()) {
+            for (Product product : dailySalesCounter.get(date).keySet()) {
+                for (String state : dailySalesCounter.get(date).get(product).keySet()) {
+                    for (Region region : dailySalesCounter.get(date).get(product).get(state).keySet()) {
+                        DailySales dailySales = new DailySales();
+                        dailySales.setRegion(region);
+                        dailySales.setProduct(product);
+                        dailySales.setStateProvCd(state);
+                        dailySales.setQuantity(dailySalesCounter.get(date).get(product).get(state).get(region));
+                        dailySales.setDate(date);
+                        em.persist(dailySales);
+                    }
+                }
+            }
+            System.out.println(date);
+        }
     }
 
     /* There is a huge assumption that the person calling this method knows what it is doing
@@ -153,7 +132,7 @@ public class InitialLoadEntityManagerProxy implements EntityManager {
         dailySalesCounter = new TreeMap<>();
     }
 
-    
+
     //----the rest of the class is delegated to the internal EntityManager
     @Override
     public <T> T merge(T t) {

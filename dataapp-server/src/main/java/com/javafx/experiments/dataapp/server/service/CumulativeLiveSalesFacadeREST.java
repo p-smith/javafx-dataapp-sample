@@ -34,11 +34,11 @@ package com.javafx.experiments.dataapp.server.service;
 
 import com.javafx.experiments.dataapp.model.ProductType;
 import com.javafx.experiments.dataapp.model.Region;
-import com.javafx.experiments.dataapp.model.transit.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import com.javafx.experiments.dataapp.model.transit.ProductTypeTransitCumulativeSeriesSales;
+import com.javafx.experiments.dataapp.model.transit.RegionTransitCumulativeSales;
+import com.javafx.experiments.dataapp.model.transit.StateTransitCumulativeSales;
+import com.javafx.experiments.dataapp.model.transit.TransitCumulativeSales;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Parameter;
@@ -48,6 +48,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @Stateless
 @Path("com.javafx.experiments.dataapp.model.cumulativelivesales")
@@ -195,7 +199,6 @@ public class CumulativeLiveSalesFacadeREST {
     @Produces({"application/xml", "application/json"})
     public List<TransitCumulativeSales> findRecent() {     
         TypedQuery<Object[]> baseRangeQuery = em.createQuery(BASE_RANGE_QUERY, Object[].class);
-        //Query baseRangeQuery = getEntityManager().createQuery(BASE_RANGE_QUERY);
         baseRangeQuery.setMaxResults(200);
         List<TransitCumulativeSales> result = new ArrayList<>();
         List<Object[]> resultList = baseRangeQuery.getResultList();
@@ -220,7 +223,7 @@ public class CumulativeLiveSalesFacadeREST {
         long DIFF, TIME = System.currentTimeMillis(), START_TIME = System.currentTimeMillis();
         TypedQuery<Object[]> q = getEntityManager().createQuery(TYPE_SUM_QUERY, Object[].class);
       
-        DIFF = (System.currentTimeMillis() - TIME);
+        DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q1 COMP TIME = "+DIFF+"ms");
         TIME = System.currentTimeMillis();
         
@@ -232,7 +235,7 @@ public class CumulativeLiveSalesFacadeREST {
         List<ProductTypeTransitCumulativeSeriesSales> result = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         
-        DIFF = (System.currentTimeMillis() - TIME);
+        DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q1 TIME = "+DIFF+"ms");
         TIME = System.currentTimeMillis();
                
@@ -256,7 +259,7 @@ public class CumulativeLiveSalesFacadeREST {
         q2.setParameter(p2, Integer.parseInt(to));
         resultList = q2.getResultList();
         
-        DIFF = (System.currentTimeMillis() - TIME);
+        DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q2 TIME = "+DIFF+"ms");
         
         for (Object[] o : resultList) {
@@ -270,7 +273,7 @@ public class CumulativeLiveSalesFacadeREST {
             tcs.setSeries(seriesGenerator.get(tcs.getProductType())) ;
         }
         
-        DIFF = (System.currentTimeMillis() - START_TIME);
+        DIFF = System.currentTimeMillis() - START_TIME;
         System.out.println("    TOTAL TIME = "+DIFF+"ms");
 
         return result;
@@ -301,7 +304,7 @@ public class CumulativeLiveSalesFacadeREST {
             result.add(t);
         }
         
-        DIFF = (System.currentTimeMillis() - START_TIME);
+        DIFF = System.currentTimeMillis() - START_TIME;
         System.out.println("    TOTAL TIME = "+DIFF+"ms");
         
         return result;
@@ -357,7 +360,7 @@ public class CumulativeLiveSalesFacadeREST {
             result.add(t);
         }
         
-        DIFF = (System.currentTimeMillis() - START_TIME);
+        DIFF = System.currentTimeMillis() - START_TIME;
         System.out.println("    TOTAL TIME = "+DIFF+"ms");
         
         return result;
@@ -371,7 +374,7 @@ public class CumulativeLiveSalesFacadeREST {
         long DIFF, TIME = System.currentTimeMillis(), START_TIME = System.currentTimeMillis();
         TypedQuery<Object[]> q = getEntityManager().createQuery(REGION_TYPE_SUM_QUERY, Object[].class);
       
-        DIFF = (System.currentTimeMillis() - TIME);
+        DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q1 COMP TIME = "+DIFF+"ms");
         TIME = System.currentTimeMillis();
         
@@ -385,7 +388,7 @@ public class CumulativeLiveSalesFacadeREST {
         List<ProductTypeTransitCumulativeSeriesSales> result = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         
-        DIFF = (System.currentTimeMillis() - TIME);
+        DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q1 TIME = "+DIFF+"ms");
         TIME = System.currentTimeMillis();
                
@@ -411,7 +414,7 @@ public class CumulativeLiveSalesFacadeREST {
         q2.setParameter(p3, regionId);
         resultList = q2.getResultList();
         
-        DIFF = (System.currentTimeMillis() - TIME);
+        DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q2 TIME = "+DIFF+"ms");
         
         for (Object[] o : resultList) {
@@ -425,7 +428,7 @@ public class CumulativeLiveSalesFacadeREST {
             tcs.setSeries(seriesGenerator.get(tcs.getProductType()));
         }
         
-        DIFF = (System.currentTimeMillis() - START_TIME);
+        DIFF = System.currentTimeMillis() - START_TIME;
         System.out.println("    TOTAL TIME = "+DIFF+"ms");
 
         return result;

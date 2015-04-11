@@ -43,8 +43,7 @@ import java.util.List;
 public class DailySalesGenerator {
     private final EntityManager em;
     
-    //columns are commented out because the DB doesnt handle GROUP by null
-    private static final String BASE_QUERY = 
+    private static final String BASE_QUERY =
         "select "
             + "so.region.regionId, "
             + "sol.product.productId, "
@@ -68,8 +67,8 @@ public class DailySalesGenerator {
     
     private static final String REMOVE_QUERY = "select so from SalesOrder so where so.date < :date1";
         
-    TypedQuery<Object[]> baseQuery;
-    TypedQuery<SalesOrder> removeQuery;
+    private TypedQuery<Object[]> baseQuery;
+    private TypedQuery<SalesOrder> removeQuery;
         
     public DailySalesGenerator(EntityManager em){
         this.em = em;        

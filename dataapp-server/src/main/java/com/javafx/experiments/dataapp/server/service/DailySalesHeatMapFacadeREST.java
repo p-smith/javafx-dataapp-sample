@@ -32,22 +32,16 @@
 package com.javafx.experiments.dataapp.server.service;
 
 import com.javafx.experiments.dataapp.model.Region;
-import com.javafx.experiments.dataapp.model.transit.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import com.javafx.experiments.dataapp.model.transit.HeatMapQuantity;
+import com.javafx.experiments.dataapp.model.transit.HeatMapRange;
+
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.Parameter;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import java.util.*;
 
 @Stateless
 @Path("com.javafx.experiments.dataapp.model.heatmap")
@@ -99,7 +93,7 @@ public class DailySalesHeatMapFacadeREST {
 
         List<Object[]> resultList = baseQuery.getResultList();
 
-        DIFF = (System.currentTimeMillis() - TIME);
+        DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q TIME = "+DIFF+"ms");
 
         for (Object[] o : resultList) {
@@ -130,7 +124,7 @@ public class DailySalesHeatMapFacadeREST {
 
         List<Object[]> resultList = baseQuery.getResultList();
 
-        DIFF = (System.currentTimeMillis() - TIME);
+        DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q TIME = "+DIFF+"ms");
 
         for (Object[] o : resultList) {

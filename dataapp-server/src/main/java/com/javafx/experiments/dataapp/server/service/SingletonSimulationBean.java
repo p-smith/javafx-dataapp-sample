@@ -33,14 +33,10 @@ package com.javafx.experiments.dataapp.server.service;
 
 import com.javafx.experiments.dataapp.simulation.DailySalesGenerator;
 import com.javafx.experiments.dataapp.simulation.SalesSimulator;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.Singleton;
-import javax.ejb.LocalBean;
-import javax.ejb.Startup;
-import javax.ejb.Timeout;
-import javax.ejb.Timer;
-import javax.ejb.TimerService;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -50,34 +46,33 @@ import javax.persistence.PersistenceContext;
 public class SingletonSimulationBean {
     @PersistenceContext(unitName = "DataAppLibraryPU")
     private EntityManager em;
-    
+
     SalesSimulator sim;
     DailySalesGenerator hourlySalesGenerator;
-    
+
     Timer simulationTimer;
     Timer hourlySalesTimer;
-    
+
     @Resource
     TimerService timerService;
-    
+
     @PostConstruct
-    public void applicationStartup(){   
+    public void applicationStartup() {
         sim = new SalesSimulator(em);
         hourlySalesGenerator = new DailySalesGenerator(em);
 
-       simulationTimer = timerService.createTimer(SalesSimulator.TIME_BETWEEN_SALES, SalesSimulator.TIME_BETWEEN_SALES, "Creating Auto Sales simulation");
+        simulationTimer = timerService.createTimer(SalesSimulator.TIME_BETWEEN_SALES, SalesSimulator.TIME_BETWEEN_SALES, "Creating Auto Sales simulation");
         //run on startup, move over old sales
-       hourlySalesTimer = timerService.createTimer(1000, 60*1000*60*24, "Creating data migration service");
+        hourlySalesTimer = timerService.createTimer(1000, 60 * 1000 * 60 * 24, "Creating data migration service");
     }
-        
+
     @Timeout
     public void timeout(Timer timer) {
-        if (timer.equals(simulationTimer)){
+        if (timer.equals(simulationTimer)) {
             sim.run();
-        }
-        else if (timer.equals(hourlySalesTimer)){
+        } else if (timer.equals(hourlySalesTimer)) {
             hourlySalesGenerator.run();
         }
     }
-    
+
 }
