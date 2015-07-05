@@ -2,7 +2,7 @@ Prerequisites:
 1. JDK 1.7
 2. Apache Derby (bundled with JDK)
 3. NetBeans 8
-4. Wildfly 8.2 web server
+4. Wildfly 9 web server
 
 Setting up the project:
 1. Open the main (parent) project and its required projects.
