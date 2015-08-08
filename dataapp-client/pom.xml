@@ -63,7 +63,19 @@
                         <configuration>
                             <excludeScope>system</excludeScope>
                             <excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
+                            <excludeArtifactIds>dataapp-preloader</excludeArtifactIds>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-preloader</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <includeArtifactIds>dataapp-preloader</includeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
@@ -74,7 +86,7 @@
                 <version>1.2.1</version>
                 <executions>
                     <execution>
-                        <id>unpack-dependencies</id>
+                        <id>javafx-createjar</id>
                         
                         <phase>package</phase>
                         <goals>
@@ -94,7 +106,31 @@
                                 <argument>-outdir</argument>
                                 <argument>${project.build.directory}</argument>
                                 <argument>-outfile</argument>
-                                <argument>${project.build.finalName}.jar</argument>
+                                <argument>${project.build.finalName}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>javafx-deploy</id>
+
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${java.home}/../bin/javafxpackager</executable>
+                            <arguments>
+                                <argument>-deploy</argument>
+                                <argument>-appclass</argument>
+                                <argument>${mainClass}</argument>
+                                <argument>-preloader</argument>
+                                <argument>dataapppreloader.DataAppPreloader</argument>
+                                <argument>-srcdir</argument>
+                                <argument>${project.build.directory}</argument>
+                                <argument>-outdir</argument>
+                                <argument>${project.build.directory}</argument>
+                                <argument>-outfile</argument>
+                                <argument>${project.build.finalName}</argument>
                             </arguments>
                         </configuration>
                     </execution>
