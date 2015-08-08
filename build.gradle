@@ -1,0 +1,116 @@
+subprojects {
+	apply plugin: "java"
+
+	version = "1.0"
+	sourceCompatibility = "1.7"
+
+	repositories {
+	    mavenCentral()
+	}
+
+	configurations {
+		provided
+	}
+
+	sourceSets.main.compileClasspath += configurations.provided
+}
+
+project("dataapp-library") {
+	dependencies {
+		provided "org.eclipse.persistence:javax.persistence:2.1.0"
+		provided "org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.6.0"
+	}
+
+	sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDir
+	compileJava.dependsOn processResources
+}
+
+project("dataapp-loader") {
+	dependencies {
+		compile project(":dataapp-library")
+		runtime "org.apache.derby:derbyclient:10.10.2.0"
+		runtime "org.eclipse.persistence:eclipselink:2.6.0"
+		provided "org.eclipse.persistence:javax.persistence:2.1.0"
+	}
+}
+
+project("dataapp-server") {
+	apply plugin: "war"
+
+	configurations {
+		endorsed {
+			provided.extendsFrom endorsed
+		}
+	}
+
+	dependencies {
+		compile project(":dataapp-library")
+		endorsed "javax:javaee-web-api:7.0"
+	}
+
+	task stageEndorsed(type: Sync) {
+		from configurations.endorsed
+		into "$buildDir/endorsed"
+	}
+
+	tasks.withType(JavaCompile) {
+		dependsOn stageEndorsed
+		options.compilerArgs += ["-endorseddirs", stageEndorsed.destinationDir]
+	}
+}
+
+configure([project("dataapp-preloader"), project("dataapp-client")]) { 
+	dependencies {
+		provided files("${System.getenv('JAVA_HOME')}/jre/lib/jfxrt.jar")
+	}
+
+	task fxJar {
+		dependsOn classes
+		//jar.actions = []
+		jar.enabled = false
+		jar.dependsOn fxJar
+		
+		ant.taskdef(resource: "com/sun/javafx/tools/ant/antlib.xml", classpath: "${System.getenv('JAVA_HOME')}/lib/ant-javafx.jar")
+	}
+
+	sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDir
+}
+
+project("dataapp-preloader") {
+	fxJar << {
+		ant.jar(destfile: "$libsDir/$project.name-${version}.jar") {
+			ant.application name: "Preloader", mainClass: "dataapppreloader.DataAppPreloader"
+			fileset dir: sourceSets.main.output.classesDir
+		}
+	}
+}
+
+project("dataapp-client") {
+	dependencies {
+		provided project(":dataapp-preloader")
+		compile project(":dataapp-library")
+		compile "javax.ws.rs:javax.ws.rs-api:2.0.1"
+		compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.5.4"
+		runtime "org.glassfish.jersey.core:jersey-client:2.19"
+	}
+
+	sourceSets.main.compileClasspath += project(":dataapp-library").configurations.provided
+
+	task copyDependencies(type: Copy) {
+		from configurations.runtime
+		into "$libsDir/deps"
+	}
+
+	fxJar.dependsOn += copyDependencies
+	fxJar << {
+		ant.jar(destfile: "$libsDir/$project.name-${version}.jar") {
+			fileset dir: sourceSets.main.output.classesDir
+
+			ant.application name: "Dataapp Client", mainClass: "com.javafx.experiments.dataapp.client.DataApplication",
+				preloaderClass: "dataapppreloader.DataAppPreloader"
+			ant.resources {
+				fileset dir: "$libsDir/deps"
+			}
+		}
+	}
+}
