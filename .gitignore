@@ -1,2 +1,4 @@
-/dataapp-preloader/target/
-/dataapp-client/target/
+.gradle/
+build/
+
+.idea/
