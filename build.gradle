@@ -12,16 +12,7 @@ subprojects {
 project("dataapp-library") {
     dependencies {
         compileOnly "org.eclipse.persistence:javax.persistence:2.1.0"
-        compileOnly "org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.6.4"
     }
-
-    jar {
-        exclude "**/*.java"
-    }
-
-    // copy persistence.xml to trigger metamodel generation via annotation processor
-    sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDir
-    compileJava.dependsOn processResources
 }
 
 project("dataapp-loader") {

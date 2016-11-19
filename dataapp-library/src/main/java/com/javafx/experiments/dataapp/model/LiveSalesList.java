@@ -51,6 +51,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LiveSalesList.findAll", query = "SELECT l FROM LiveSalesList l"),
     @NamedQuery(name = "LiveSalesList.findByOrderLineId", query = "SELECT l FROM LiveSalesList l WHERE l.orderLineId = :orderLineId"),
     @NamedQuery(name = "LiveSalesList.findByProduct", query = "SELECT l FROM LiveSalesList l WHERE l.product = :product"),
+    @NamedQuery(name = "LiveSalesList.findByProductTypeId", query = "SELECT l FROM LiveSalesList l WHERE l.productTypeId = :productTypeId"),
     @NamedQuery(name = "LiveSalesList.findByType", query = "SELECT l FROM LiveSalesList l WHERE l.type = :type"),
     @NamedQuery(name = "LiveSalesList.findBySubType", query = "SELECT l FROM LiveSalesList l WHERE l.subType = :subType"),
     @NamedQuery(name = "LiveSalesList.findByPrice", query = "SELECT l FROM LiveSalesList l WHERE l.price = :price"),
@@ -60,7 +61,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LiveSalesList.findByDealer", query = "SELECT l FROM LiveSalesList l WHERE l.dealer = :dealer"),
     @NamedQuery(name = "LiveSalesList.findBySalesman", query = "SELECT l FROM LiveSalesList l WHERE l.salesman = :salesman"),
     @NamedQuery(name = "LiveSalesList.findByDate", query = "SELECT l FROM LiveSalesList l WHERE l.date = :date"),
-    @NamedQuery(name = "LiveSalesList.findFromOrderLineId", query = "SELECT l FROM LiveSalesList l WHERE l.orderLineId > :orderLineId")})
+    @NamedQuery(name = "LiveSalesList.findFromOrderLineId", query = "SELECT l FROM LiveSalesList l WHERE l.orderLineId > :orderLineId"),
+    @NamedQuery(name = "LiveSalesList.findByRegionFromOrderLineId", query = "SELECT l FROM LiveSalesList l WHERE l.region = :region AND l.orderLineId > :orderLineId"),
+    @NamedQuery(name = "LiveSalesList.findByProductTypeFromOrderLineId", query = "SELECT l FROM LiveSalesList l WHERE l.productTypeId = :productTypeId AND l.orderLineId > :orderLineId"),
+    @NamedQuery(name = "LiveSalesList.findByProductTypeIdByRegion", query = "SELECT l FROM LiveSalesList l WHERE l.productTypeId = :productTypeId AND l.region = :region"),
+    @NamedQuery(name = "LiveSalesList.findByProductTypeIdByRegionFromOrderLineId", query = "SELECT l FROM LiveSalesList l WHERE l.productTypeId = :productTypeId AND l.region = :region AND l.orderLineId > :orderLineId")})
 public class LiveSalesList implements Serializable {
     private static final long serialVersionUID = 1L;
 

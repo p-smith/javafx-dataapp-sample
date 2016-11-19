@@ -32,7 +32,6 @@
 package com.javafx.experiments.dataapp.server.service;
 
 import com.javafx.experiments.dataapp.model.LiveSalesList;
-import com.javafx.experiments.dataapp.model.LiveSalesList_;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -100,108 +99,74 @@ public class LiveSalesListFacadeREST extends AbstractFacade<LiveSalesList> {
     @Produces({"application/xml", "application/json"})
     @Path("/recent/")
     public List<LiveSalesList> findRecent() {
-        CriteriaQuery<LiveSalesList> cq = getEntityManager().getCriteriaBuilder().createQuery(LiveSalesList.class);
-        cq.select(cq.from(LiveSalesList.class));
-        TypedQuery<LiveSalesList> q = getEntityManager().createQuery(cq);
-        q.setMaxResults(500);
-        return q.getResultList();
+        return getEntityManager().createNamedQuery("LiveSalesList.findAll", LiveSalesList.class)
+                .setMaxResults(500)
+                .getResultList();
     }
     
     @GET
     @Produces({"application/xml", "application/json"})
     @Path("/recent/region/{regionName}")
     public List<LiveSalesList> findRecentRegion(@PathParam("regionName") String regionName) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<LiveSalesList> cq = cb.createQuery(LiveSalesList.class);
-        Root<LiveSalesList> liveSalesList = cq.from(LiveSalesList.class);
-        cq.select(liveSalesList);
-        cq.where(cb.equal(liveSalesList.get(LiveSalesList_.region), regionName));
-        TypedQuery<LiveSalesList> q = getEntityManager().createQuery(cq);
-        q.setMaxResults(500);
-        return q.getResultList();
+        return getEntityManager().createNamedQuery("LiveSalesList.findByRegion", LiveSalesList.class)
+                .setParameter("region", regionName)
+                .setMaxResults(500)
+                .getResultList();
     }
     
     @GET
     @Produces({"application/xml", "application/json"})
     @Path("/recent/region/{regionName}/{orderLineId}")
     public List<LiveSalesList> findRecentRegionFrom(@PathParam("regionName") String regionName, @PathParam("orderLineId") Integer orderLineId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<LiveSalesList> cq = cb.createQuery(LiveSalesList.class);
-        Root<LiveSalesList> liveSalesList = cq.from(LiveSalesList.class);
-        cq.select(liveSalesList);
-        cq.where(cb.and(
-            cb.equal(liveSalesList.get(LiveSalesList_.region), regionName),
-            cb.gt(liveSalesList.get(LiveSalesList_.orderLineId), orderLineId)
-        ));
-        TypedQuery<LiveSalesList> q = getEntityManager().createQuery(cq);
-        q.setMaxResults(500);
-        return q.getResultList();
+        return getEntityManager().createNamedQuery("LiveSalesList.findByRegionFromOrderLineId", LiveSalesList.class)
+                .setParameter("region", regionName)
+                .setParameter("orderLineId", orderLineId)
+                .setMaxResults(500)
+                .getResultList();
     }    
     
     @GET
     @Produces({"application/xml", "application/json"})
     @Path("/recent/producttype/{id}")
     public List<LiveSalesList> findRecentProductType(@PathParam("id") Integer productTypeId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<LiveSalesList> cq = cb.createQuery(LiveSalesList.class);
-        Root<LiveSalesList> liveSalesList = cq.from(LiveSalesList.class);
-        cq.select(liveSalesList);
-        cq.where(cb.equal(liveSalesList.get(LiveSalesList_.productTypeId), productTypeId));
-        TypedQuery<LiveSalesList> q = getEntityManager().createQuery(cq);
-        q.setMaxResults(500);
-        return q.getResultList();
+        return getEntityManager().createNamedQuery("LiveSalesList.findByProductTypeId", LiveSalesList.class)
+                .setParameter("productTypeId", productTypeId)
+                .setMaxResults(500)
+                .getResultList();
     }
     
     @GET
     @Produces({"application/xml", "application/json"})
     @Path("/recent/producttype/{id}/{orderLineId}")
     public List<LiveSalesList> findRecentProductTypeFrom(@PathParam("id") Integer productTypeId, @PathParam("orderLineId") Integer orderLineId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<LiveSalesList> cq = cb.createQuery(LiveSalesList.class);
-        Root<LiveSalesList> liveSalesList = cq.from(LiveSalesList.class);
-        cq.select(liveSalesList);
-        cq.where(cb.and(
-            cb.equal(liveSalesList.get(LiveSalesList_.productTypeId), productTypeId),
-            cb.gt(liveSalesList.get(LiveSalesList_.orderLineId), orderLineId)
-        ));
-        TypedQuery<LiveSalesList> q = getEntityManager().createQuery(cq);
-        q.setMaxResults(500);
-        return q.getResultList();
+        return getEntityManager().createNamedQuery("LiveSalesList.findByProductTypeFromOrderLineId", LiveSalesList.class)
+                .setParameter("productTypeId", productTypeId)
+                .setParameter("orderLineId", orderLineId)
+                .setMaxResults(500)
+                .getResultList();
     }    
     
     @GET
     @Produces({"application/xml", "application/json"})
     @Path("/recent/region/producttype/{regionName}/{productTypeId}")
     public List<LiveSalesList> findRecentRegionProductType(@PathParam("regionName") String regionName, @PathParam("productTypeId") Integer productTypeId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<LiveSalesList> cq = cb.createQuery(LiveSalesList.class);
-        Root<LiveSalesList> liveSalesList = cq.from(LiveSalesList.class);
-        cq.select(liveSalesList);
-        cq.where(cb.and(
-                cb.equal(liveSalesList.get(LiveSalesList_.productTypeId), productTypeId), 
-                cb.equal(liveSalesList.get(LiveSalesList_.region), regionName)
-        ));
-        TypedQuery<LiveSalesList> q = getEntityManager().createQuery(cq);
-        q.setMaxResults(500);
-        return q.getResultList();
+        return getEntityManager().createNamedQuery("LiveSalesList.findByProductTypeIdByRegion", LiveSalesList.class)
+                .setParameter("productTypeId", productTypeId)
+                .setParameter("region", regionName)
+                .setMaxResults(500)
+                .getResultList();
     }
     
     @GET
     @Produces({"application/xml", "application/json"})
     @Path("/recent/region/producttype/{regionName}/{productTypeId}/{orderLineId}")
     public List<LiveSalesList> findRecentRegionProductTypeFrom(@PathParam("regionName") String regionName, @PathParam("productTypeId") Integer productTypeId, @PathParam("orderLineId") Integer orderLineId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<LiveSalesList> cq = cb.createQuery(LiveSalesList.class);
-        Root<LiveSalesList> liveSalesList = cq.from(LiveSalesList.class);
-        cq.select(liveSalesList);
-        cq.where(cb.and(
-            cb.equal(liveSalesList.get(LiveSalesList_.productTypeId), productTypeId),
-            cb.equal(liveSalesList.get(LiveSalesList_.region), regionName),
-            cb.gt(liveSalesList.get(LiveSalesList_.orderLineId), orderLineId)
-        ));
-        TypedQuery<LiveSalesList> q = getEntityManager().createQuery(cq);
-        q.setMaxResults(500);
-        return q.getResultList();
+        return getEntityManager().createNamedQuery("LiveSalesList.findByProductTypeIdByRegionFromOrderLineId", LiveSalesList.class)
+                .setParameter("productTypeId", productTypeId)
+                .setParameter("region", regionName)
+                .setParameter("orderLineId", orderLineId)
+                .setMaxResults(500)
+                .getResultList();
     }    
 
     @GET
