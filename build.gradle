@@ -1,5 +1,3 @@
-def jdkHome = System.getenv('JAVA_HOME')
-
 subprojects {
     apply plugin: "java"
 
@@ -57,12 +55,6 @@ project("dataapp-server") {
     dependencies {
         compile project(":dataapp-library")
         compileOnly "javax:javaee-web-api:7.0"
-    }
-}
-
-configure([project("dataapp-preloader"), project("dataapp-client")]) {
-    dependencies {
-        compileOnly files("$jdkHome/jre/lib/jfxrt.jar")
     }
 }
 
