@@ -53,7 +53,7 @@ import java.util.Vector;
  * Main Application for the Henley Car Sales Application
  */
 public class DataApplication extends Application {
-    public static final String SERVER_URI = "http://localhost:8080/DataAppServer/resources";
+    public static final String SERVER_URI = "http://localhost:8080/dataapp-server/resources";
     private static final ObservableList<Object> americanRegions = FXCollections.observableArrayList();
     private static final ObservableList<Object> productTypes = FXCollections.observableArrayList();
     private static final Vector<Runnable> dataLoadingTasks = new Vector<>();

@@ -31,23 +31,21 @@
  */
 package com.javafx.experiments.dataapp.server.service;
 
-import javax.ejb.Stateless;
-import javax.ws.rs.Path;
 import com.javafx.experiments.dataapp.model.Region;
-import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Parameter;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import java.util.List;
 
-@Stateless
 @Path("com.javafx.experiments.dataapp.model.region")
 public class RegionFacadeREST {
-    @PersistenceContext(unitName = "DataAppLibraryPU")
+    @Inject
     private EntityManager em;
 
     @GET

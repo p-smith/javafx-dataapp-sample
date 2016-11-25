@@ -39,10 +39,9 @@ import com.javafx.experiments.dataapp.model.transit.RegionTransitCumulativeSales
 import com.javafx.experiments.dataapp.model.transit.StateTransitCumulativeSales;
 import com.javafx.experiments.dataapp.model.transit.TransitCumulativeSales;
 
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Parameter;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -53,31 +52,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-@Stateless
 @Path("com.javafx.experiments.dataapp.model.cumulativelivesales")
 public class CumulativeLiveSalesFacadeREST {
-    @PersistenceContext(unitName = "DataAppLibraryPU")
-    private EntityManager em;
 
-//    SQL    
-//    private static final String BASE_QUERY = "select sum(p.cost), sum(p.price) " +
-//            "from app.sales_order so "
-//            + "left outer join app.sales_order_line sol on so.order_id = sol.order_id "
-//            + "left outer join app.product p on p.product_id = sol.product_id "
-//            + "group by YEAR(so.date), MONTH(so.date), DAY(so.date), HOUR(so.date)";
-    
-    // JPQL
-//    private static final String BASE_RANGE_QUERY = 
-//            "select sum(hs.quantity * p.cost), "
-//                + " sum(hs.quantity * p.price), " 
-//                +  "FUNC('YEAR', hs.date), "
-//                + "FUNC('MONTH', hs.date), "
-//                + "FUNC('DAY', hs.date), "
-//            + "hs.date "
-//            + "from DailySales hs "
-//            + "inner join hs.productId p "
-//            + "group by FUNC('YEAR', hs.date), FUNC('MONTH', hs.date), FUNC('DAY', hs.date), hs.date "
-//            + "order by hs.date desc";
+    @Inject
+    private EntityManager em;
 
     private static final String BASE_RANGE_QUERY = 
             "select "
@@ -172,10 +151,6 @@ public class CumulativeLiveSalesFacadeREST {
     
 //end region
     
-    protected EntityManager getEntityManager() {
-        return em;
-    }
-  
     @GET
     @Produces({"application/xml", "application/json"})
     public List<TransitCumulativeSales> findAll() {       
@@ -221,7 +196,7 @@ public class CumulativeLiveSalesFacadeREST {
     public List<ProductTypeTransitCumulativeSeriesSales> findTypeRange(@PathParam("from") String from, @PathParam("to") String to) {
         System.out.println("START findTypeRange (from="+from+" , to="+to+")");
         long DIFF, TIME = System.currentTimeMillis(), START_TIME = System.currentTimeMillis();
-        TypedQuery<Object[]> q = getEntityManager().createQuery(TYPE_SUM_QUERY, Object[].class);
+        TypedQuery<Object[]> q = em.createQuery(TYPE_SUM_QUERY, Object[].class);
       
         DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q1 COMP TIME = "+DIFF+"ms");
@@ -252,7 +227,7 @@ public class CumulativeLiveSalesFacadeREST {
         //building sales range
         HashMap<ProductType, List<Double>> seriesGenerator = new HashMap<>();
         
-        TypedQuery<Object[]> q2 = getEntityManager().createQuery(TYPE_RANGE_QUERY, Object[].class);
+        TypedQuery<Object[]> q2 = em.createQuery(TYPE_RANGE_QUERY, Object[].class);
         p1 = q2.getParameter("startId", Integer.class);
         q2.setParameter(p1, Integer.parseInt(from));
         p2 = q2.getParameter("endId", Integer.class);
@@ -265,7 +240,7 @@ public class CumulativeLiveSalesFacadeREST {
         for (Object[] o : resultList) {
             ProductType pt = em.find(ProductType.class, o[1]);
             if (!seriesGenerator.containsKey(pt)) {
-                seriesGenerator.put(pt, new ArrayList<Double>());
+                seriesGenerator.put(pt, new ArrayList<>());
             }
             seriesGenerator.get(pt).add(((Long)o[0]).doubleValue());
         }
@@ -285,7 +260,7 @@ public class CumulativeLiveSalesFacadeREST {
     public List<RegionTransitCumulativeSales> findRegionRange(@PathParam("from") String from, @PathParam("to") String to) {
         System.out.println("START findRegionRange (from="+from+" , to="+to+")");
         long DIFF, START_TIME = System.currentTimeMillis();
-        TypedQuery<Object[]> q = getEntityManager().createQuery(REGION_SUM_QUERY, Object[].class);
+        TypedQuery<Object[]> q = em.createQuery(REGION_SUM_QUERY, Object[].class);
         Parameter<Integer> p1 = q.getParameter("startId", Integer.class);
         q.setParameter(p1, Integer.parseInt(from));
         Parameter<Integer> p2 = q.getParameter("endId", Integer.class);
@@ -340,7 +315,7 @@ public class CumulativeLiveSalesFacadeREST {
     public List<StateTransitCumulativeSales> findStateRange(@PathParam("from") String from, @PathParam("to") String to, @PathParam("regionId") Integer regionId) {
         System.out.println("START findRegionRange (from="+from+" , to="+to+")");
         long DIFF, START_TIME = System.currentTimeMillis();
-        TypedQuery<Object[]> q = getEntityManager().createQuery(STATE_SUM_QUERY, Object[].class);
+        TypedQuery<Object[]> q = em.createQuery(STATE_SUM_QUERY, Object[].class);
         Parameter<Integer> p1 = q.getParameter("startId", Integer.class);
         q.setParameter(p1, Integer.parseInt(from));
         Parameter<Integer> p2 = q.getParameter("endId", Integer.class);
@@ -372,7 +347,7 @@ public class CumulativeLiveSalesFacadeREST {
     public List<ProductTypeTransitCumulativeSeriesSales> findTypeRegionRange(@PathParam("from") String from, @PathParam("to") String to, @PathParam("regionId") Integer regionId) {
         System.out.println("START findTypeRange (from="+from+" , to="+to+")");
         long DIFF, TIME = System.currentTimeMillis(), START_TIME = System.currentTimeMillis();
-        TypedQuery<Object[]> q = getEntityManager().createQuery(REGION_TYPE_SUM_QUERY, Object[].class);
+        TypedQuery<Object[]> q = em.createQuery(REGION_TYPE_SUM_QUERY, Object[].class);
       
         DIFF = System.currentTimeMillis() - TIME;
         System.out.println("    Q1 COMP TIME = "+DIFF+"ms");
@@ -405,7 +380,7 @@ public class CumulativeLiveSalesFacadeREST {
         //building sales range
         HashMap<ProductType, List<Double>> seriesGenerator = new HashMap<>();
         
-        TypedQuery<Object[]> q2 = getEntityManager().createQuery(REGION_TYPE_RANGE_QUERY, Object[].class);
+        TypedQuery<Object[]> q2 = em.createQuery(REGION_TYPE_RANGE_QUERY, Object[].class);
         p1 = q2.getParameter("startId", Integer.class);
         p2 = q2.getParameter("endId", Integer.class);
         p3 = q2.getParameter("regionId", Integer.class);
@@ -420,7 +395,7 @@ public class CumulativeLiveSalesFacadeREST {
         for (Object[] o : resultList) {
             ProductType pt = em.find(ProductType.class, o[1]);
             if (!seriesGenerator.containsKey(pt)){
-                seriesGenerator.put(pt, new ArrayList<Double>());
+                seriesGenerator.put(pt, new ArrayList<>());
             }            
             seriesGenerator.get(pt).add(((Long)o[0]).doubleValue());
         }

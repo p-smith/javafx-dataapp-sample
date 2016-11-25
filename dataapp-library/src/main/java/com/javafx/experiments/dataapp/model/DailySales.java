@@ -33,23 +33,14 @@ package com.javafx.experiments.dataapp.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@Table(name = "DAILY_SALES", catalog = "", schema = "APP")
+@Table(name = "DAILY_SALES", schema = "APP", indexes = {
+        @Index(columnList = "STATE_PROV_CD"),
+        @Index(columnList = "DATE")
+})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DailySales.findAll", query = "SELECT d FROM DailySales d"),

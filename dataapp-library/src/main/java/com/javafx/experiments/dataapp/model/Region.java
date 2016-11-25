@@ -36,19 +36,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
-@Table(name = "REGION", catalog = "", schema = "APP")
+@Table(name = "REGION", schema = "APP", indexes = {
+        @Index(columnList = "START_ZONE"),
+        @Index(columnList = "END_ZONE")
+})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Region.findAll", query = "SELECT r FROM Region r"),
@@ -58,7 +54,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Region.findByZipCodePrefix", query = "SELECT r FROM Region r WHERE r.startZone <= :zone and r.endZone >= :zone and r.international=0"),
     @NamedQuery(name = "Region.findByStartZone", query = "SELECT r FROM Region r WHERE r.startZone = :startZone"),
     @NamedQuery(name = "Region.findByEndZone", query = "SELECT r FROM Region r WHERE r.endZone = :endZone")})
-
 public class Region implements Serializable {
     private static final long serialVersionUID = 1L;
 

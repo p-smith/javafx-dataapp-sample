@@ -34,13 +34,14 @@ package com.javafx.experiments.dataapp.simulation;
 import com.javafx.experiments.dataapp.model.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Parameter;
 import javax.persistence.TypedQuery;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class DailySalesGenerator {
+public class DailySalesGenerator implements Runnable {
     private final EntityManager em;
     
     private static final String BASE_QUERY =
@@ -83,7 +84,11 @@ public class DailySalesGenerator {
         System.out.println("moving over old sales orders into weekly sales");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, -1);
+
+        EntityTransaction trx = em.getTransaction();
+        trx.begin();
         generate(cal.getTime());
+        trx.commit();
         em.flush();
         em.clear();
     }
@@ -96,8 +101,6 @@ public class DailySalesGenerator {
             DailySales hourlySales = new DailySales();
             Region region = em.find(Region.class, result[0]);
             hourlySales.setRegion(region);
-            //hourlySales.setEmployeeId(null);
-            //hourlySales.setDealerId(null);
             Product product = em.find(Product.class, result[1]);
             hourlySales.setProduct(product);
             hourlySales.setStateProvCd((String)result[2]);

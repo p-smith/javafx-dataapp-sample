@@ -39,7 +39,7 @@ import javax.persistence.TypedQuery;
 import java.text.DateFormat;
 import java.util.*;
 
-public class SalesSimulator {
+public class SalesSimulator implements Runnable {
     private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance();
     //TODO: shove these constants into the database?
     //Percentage of sales, based on Ford's year end data
@@ -124,7 +124,10 @@ public class SalesSimulator {
      * Generate a single sales record for the current date and time
      */
     public void run() {
+        EntityTransaction trx = em.getTransaction();
+        trx.begin();
         generate(new Date());
+        trx.commit();
         em.flush();
     }
 

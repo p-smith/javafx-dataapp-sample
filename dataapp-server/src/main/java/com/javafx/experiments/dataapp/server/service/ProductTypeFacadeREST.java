@@ -31,20 +31,18 @@
  */
 package com.javafx.experiments.dataapp.server.service;
 
-import javax.ejb.Stateless;
-import javax.ws.rs.Path;
 import com.javafx.experiments.dataapp.model.ProductType;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-
-@Stateless
 @Path("com.javafx.experiments.dataapp.model.producttype")
 public class ProductTypeFacadeREST extends AbstractFacade<ProductType> {
-    @PersistenceContext(unitName = "DataAppLibraryPU")
+    @Inject
     private EntityManager em;
 
     public ProductTypeFacadeREST() {

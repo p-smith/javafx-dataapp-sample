@@ -32,28 +32,17 @@
 package com.javafx.experiments.dataapp.server.service;
 
 import com.javafx.experiments.dataapp.model.LiveSalesList;
-import java.util.List;
-import javax.ejb.Stateless;
+
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Parameter;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import java.util.List;
 
-@Stateless
 @Path("com.javafx.experiments.dataapp.model.livesaleslist")
 public class LiveSalesListFacadeREST extends AbstractFacade<LiveSalesList> {
-    @PersistenceContext(unitName = "DataAppLibraryPU")
+    @Inject
     private EntityManager em;
 
     public LiveSalesListFacadeREST() {
@@ -97,7 +86,7 @@ public class LiveSalesListFacadeREST extends AbstractFacade<LiveSalesList> {
     
     @GET
     @Produces({"application/xml", "application/json"})
-    @Path("/recent/")
+    @Path("/recent")
     public List<LiveSalesList> findRecent() {
         return getEntityManager().createNamedQuery("LiveSalesList.findAll", LiveSalesList.class)
                 .setMaxResults(500)

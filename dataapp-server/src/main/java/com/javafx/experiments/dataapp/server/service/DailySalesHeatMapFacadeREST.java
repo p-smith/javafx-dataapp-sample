@@ -35,7 +35,7 @@ import com.javafx.experiments.dataapp.model.Region;
 import com.javafx.experiments.dataapp.model.transit.HeatMapQuantity;
 import com.javafx.experiments.dataapp.model.transit.HeatMapRange;
 
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.*;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -43,11 +43,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.*;
 
-@Stateless
 @Path("com.javafx.experiments.dataapp.model.heatmap")
 public class DailySalesHeatMapFacadeREST {
 
-    @PersistenceContext(unitName = "DataAppLibraryPU")
+    @Inject
     private EntityManager em;
     
     private static final String BASE_QUERY =
@@ -159,9 +158,9 @@ public class DailySalesHeatMapFacadeREST {
         List<HeatMapQuantity> results = new ArrayList<>();
         for(String state : Region.ALL_STATES) {
             Long v1 = resultMap1.get(state);
-            if (v1 == null) v1 = 0l;
+            if (v1 == null) v1 = 0L;
             Long v2 = resultMap2.get(state);
-            if (v2 == null) v2 = 0l;
+            if (v2 == null) v2 = 0L;
             results.add( new HeatMapQuantity(v1-v2,state,Region.getRegionName(state)));
         }
         return results;
@@ -193,15 +192,13 @@ public class DailySalesHeatMapFacadeREST {
         else {
             resultMap2 = runProductTypeQuery(date2, productTypeId2);
         }
-        
-        
-        
+
         List<HeatMapQuantity> results = new ArrayList<>();
         for(String state : Region.ALL_STATES) {
             Long v1 = resultMap1.get(state);
-            if (v1 == null) v1 = 0l;
+            if (v1 == null) v1 = 0L;
             Long v2 = resultMap2.get(state);
-            if (v2 == null) v2 = 0l;
+            if (v2 == null) v2 = 0L;
             results.add( new HeatMapQuantity(v1-v2,state,Region.getRegionName(state)));
         }
         return results;
