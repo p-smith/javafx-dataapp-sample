@@ -36,18 +36,15 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadowBuilder;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.LineBuilder;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.SVGPathBuilder;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextBuilder;
 import javafx.util.Duration;
 
 /**
@@ -77,25 +74,32 @@ public class RaceTrack extends Pane {
     public DoubleProperty progressProperty() { return progress; }
 
     public RaceTrack() {
-        SVGPath road = SVGPathBuilder.create()
-                .content(trackPath).fill(null).stroke(Color.gray(0.4))
-                .strokeWidth(50)
-                .effect(DropShadowBuilder.create().radius(20).blurType(BlurType.ONE_PASS_BOX).build())
-                .build();
-        SVGPath trackLine = SVGPathBuilder.create()
-                .content(trackPath).fill(null).stroke(Color.WHITE)
-                .strokeDashArray(8d,6d).build();
-        Line startLine = LineBuilder.create()
-                .startX(610.312).startY(401.055).endX(610.312).endY(450.838)
-                .stroke(Color.WHITE).strokeDashArray(2d,2d).build();
-        Text startFinish = TextBuilder.create().text("START/FINISH").fill(Color.WHITE)
-                .x(570).y(475).build();
-        percentage = TextBuilder.create().text("0%")
-                .x(390).y(170).font(Font.font("System", 60))
-                .fill(Color.web("#ddf3ff"))
-                .stroke(Color.web("#73c0f7"))
-                .effect(DropShadowBuilder.create().radius(15).color(Color.web("#3382ba")).blurType(BlurType.ONE_PASS_BOX).build())
-                .build();
+        SVGPath road = new SVGPath();
+        road.setContent(trackPath);
+        road.setFill(null);
+        road.setStroke(Color.gray(0.4));
+        road.setStrokeWidth(50);
+        road.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.BLACK, 20, 0, 0, 0));
+
+        SVGPath trackLine = new SVGPath();
+        trackLine.setContent(trackPath);
+        trackLine.setFill(null);
+        trackLine.setStroke(Color.WHITE);
+        trackLine.getStrokeDashArray().addAll(8d, 6d);
+
+        Line startLine = new Line(610.312, 401.055, 610.312, 450.838);
+        startLine.setStroke(Color.WHITE);
+        startLine.getStrokeDashArray().addAll(2d, 2d);
+
+        Text startFinish = new Text(570, 475, "START/FINISH");
+        startFinish.setFill(Color.WHITE);
+
+        percentage = new Text(390, 170, "0%");
+        percentage.setFont(Font.font("System", 60));
+        percentage.setFill(Color.web("#ddf3ff"));
+        percentage.setStroke(Color.web("#73c0f7"));
+        percentage.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, Color.web("#3382ba"), 15, 0, 0, 0));
+
         ImageView raceCarImg = new ImageView(new Image(
                 DataAppPreloader.class.getResourceAsStream("images/Mini-red-and-white.png")));
         raceCarImg.setX(raceCarImg.getImage().getWidth()/2);

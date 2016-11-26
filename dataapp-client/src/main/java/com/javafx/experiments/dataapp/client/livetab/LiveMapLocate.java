@@ -40,7 +40,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadowBuilder;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
@@ -52,7 +52,7 @@ import javafx.util.Duration;
  * Helper class to draw sales on the map
  */
 public class LiveMapLocate {
-    
+
     //westernmost point in US: Cape Alava, Washington 48.164167,124.733056
     private static final double usLongitudeOrigin = 124.733056;
     //northernmost point in US: Lake of the Woods, Minnesota: 49.384358, 95.153314 
@@ -61,7 +61,7 @@ public class LiveMapLocate {
     private static final double usLongitudeMaximum = 66.949895;
     //southernmost point in US: Key West, Florida: 24.544701, 81.810333
     private static final double usLatitudeMaximum = 24.544701;
-    
+
     //range of longitude
     private static final double rangeLong = usLongitudeMaximum - usLongitudeOrigin;
     //range of latitude
@@ -69,11 +69,11 @@ public class LiveMapLocate {
 
     final private double scaleLongToX;
     final private double scaleLatToY;
-    
+
     private final Bounds bounds;
     private final Group group;
-    
-    
+
+
             //Sanity Checks --------------------------------------------------------
 //        //Boston
 //        //42.357778, -71.061667        
@@ -107,43 +107,43 @@ public class LiveMapLocate {
 //        BigDecimal LWLat = new BigDecimal(-95.153314);
 //        BigDecimal LWLong = new BigDecimal(49.384358);
 //        liveMapLocate.drawComplex(LWLat, LWLong);
-    
-    
+
+
     public LiveMapLocate(Group group, Bounds bounds){
 
         double rangeX = bounds.getMinX() - bounds.getMaxX();
         double rangeY = bounds.getMinY() - bounds.getMaxY();
-        
+
         scaleLongToX = rangeX /rangeLong;
         scaleLatToY = rangeY /rangeLat;
-        
+
         this.bounds = bounds;
         this.group = group;
-              
+
     }
-        
+
     public void drawComplex(Double longitude, Double latitude, boolean isNew, Color circleColor){
         if (longitude == null || latitude == null) return;
         //Longitude comes in negative
         double locationLong = longitude * -1;
         //Latitude comes in positive
         double locationLat = latitude ;
-        
+
         //if the location is outside the continental us, ignore
         if ((locationLong > usLongitudeOrigin || locationLong < usLongitudeMaximum) || (locationLat < usLatitudeMaximum || locationLat > usLatitudeOrigin)) {
             return;
         }
-        
+
         final double translatedLongitude = ((usLongitudeOrigin - locationLong)  * scaleLongToX) + bounds.getMinX();
         final double translatedLatitude = ((usLatitudeOrigin -locationLat ) *scaleLatToY) + bounds.getMinY();
-        
+
         double startRadius = 30;
         double endShrinkRadius = 6;
         double endGrowthRadius = 600;
         //double endOpacity = .3;
-        
+
         if (circleColor == null) circleColor = Color.WHITE;
-        
+
         //circles
         final Circle shrinkCircle = new Circle();
         shrinkCircle.setTranslateX(translatedLongitude);
@@ -151,8 +151,8 @@ public class LiveMapLocate {
         shrinkCircle.setRadius(startRadius);
         shrinkCircle.setFill(
                 new RadialGradient(
-                    0, 0, 0.3, 0.3, 0.8, true, 
-                    CycleMethod.NO_CYCLE, 
+                    0, 0, 0.3, 0.3, 0.8, true,
+                    CycleMethod.NO_CYCLE,
                     new Stop(0,Color.WHITE),
                     new Stop(0.1,circleColor.deriveColor(0, 0.9, 1.8, 1)),
                     new Stop(0.8,circleColor),
@@ -160,7 +160,7 @@ public class LiveMapLocate {
                 ));
 
         group.getChildren().add(shrinkCircle);
-        
+
         if (isNew) {
             final Circle growthCircle1 = new Circle();
             growthCircle1.setTranslateX(translatedLongitude);
@@ -188,28 +188,27 @@ public class LiveMapLocate {
             growthCircle3.setStrokeWidth(3);
             growthCircle3.setRadius(1);
             growthCircle3.setVisible(false);
-            
+
             final Group circleGroup = new Group(growthCircle1, growthCircle2, growthCircle3);
             Color lighter = circleColor.deriveColor(0, 1, 1.5, 1);
-            
-            circleGroup.setEffect(
-                    DropShadowBuilder.create().blurType(BlurType.TWO_PASS_BOX).radius(30).spread(0.6).color(lighter).build());
+
+            circleGroup.setEffect(new DropShadow(BlurType.TWO_PASS_BOX, lighter, 30, 0.6, 0, 0));
             group.getChildren().add(circleGroup);
-            
-            shrinkCircle.setEffect(DropShadowBuilder.create().blurType(BlurType.ONE_PASS_BOX).color(circleColor).radius(5).build());
-        
+
+            shrinkCircle.setEffect(new DropShadow(BlurType.ONE_PASS_BOX, circleColor, 5, 0, 0, 0));
+
             Timeline timeline = new Timeline();
             timeline.getKeyFrames().addAll(
                //shrinking
-                new KeyFrame(Duration.ZERO, 
-                    new KeyValue(shrinkCircle.radiusProperty(), 0, Interpolator.EASE_OUT)),    
-                new KeyFrame(Duration.millis(100), 
-                    new KeyValue(shrinkCircle.radiusProperty(), startRadius*1.2, Interpolator.EASE_OUT)),    
-                new KeyFrame(Duration.millis(150), 
-                    new KeyValue(shrinkCircle.radiusProperty(), startRadius, Interpolator.EASE_OUT)),    
-                new KeyFrame(Duration.millis(3000), 
+                new KeyFrame(Duration.ZERO,
+                    new KeyValue(shrinkCircle.radiusProperty(), 0, Interpolator.EASE_OUT)),
+                new KeyFrame(Duration.millis(100),
+                    new KeyValue(shrinkCircle.radiusProperty(), startRadius*1.2, Interpolator.EASE_OUT)),
+                new KeyFrame(Duration.millis(150),
+                    new KeyValue(shrinkCircle.radiusProperty(), startRadius, Interpolator.EASE_OUT)),
+                new KeyFrame(Duration.millis(3000),
                     new KeyValue(shrinkCircle.radiusProperty(), startRadius*.8, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.millis(6000), 
+                new KeyFrame(Duration.millis(6000),
                     new KeyValue(shrinkCircle.radiusProperty(), endShrinkRadius, Interpolator.EASE_IN)),
                 //growing
                 new KeyFrame(Duration.millis(100),
@@ -241,9 +240,9 @@ public class LiveMapLocate {
                     new KeyValue(growthCircle3.radiusProperty(), endGrowthRadius, Interpolator.EASE_OUT),
                     new KeyValue(growthCircle3.opacityProperty(), 0, Interpolator.EASE_OUT))
             );
-       
+
             timeline.setCycleCount(1);
-            timeline.play();  
+            timeline.play();
         } else {
             shrinkCircle.setRadius(endShrinkRadius);
         }
