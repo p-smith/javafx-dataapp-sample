@@ -1,4 +1,4 @@
-include 'dataapp-client'
 include 'dataapp-library'
-include 'dataapp-preloader'
 include 'dataapp-server'
+include 'dataapp-preloader'
+include 'dataapp-client'

@@ -31,15 +31,26 @@
  */
 package com.javafx.experiments.dataapp.server;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.glassfish.hk2.api.Factory;
 
-public class GeneralJob implements Job {
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
+public class EntityManagerSource implements Factory<EntityManager> {
+    private final EntityManagerFactory emf;
+
+    @Inject
+    public EntityManagerSource(EntityManagerFactory emf) {
+        this.emf = emf;
+    }
+
+    public EntityManager provide() {
+        return emf.createEntityManager();
+    }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        Runnable runnable = (Runnable) context.getJobDetail().getJobDataMap().get("runnable");
-        runnable.run();
+    public void dispose(EntityManager entityManager) {
+        entityManager.close();
     }
 }

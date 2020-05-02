@@ -128,7 +128,6 @@ public class SalesSimulator implements Runnable {
         trx.begin();
         generate(new Date());
         trx.commit();
-        em.flush();
     }
 
     /**

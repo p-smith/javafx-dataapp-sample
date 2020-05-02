@@ -89,8 +89,6 @@ public class DailySalesGenerator implements Runnable {
         trx.begin();
         generate(cal.getTime());
         trx.commit();
-        em.flush();
-        em.clear();
     }
     
     private void generate(Date date){

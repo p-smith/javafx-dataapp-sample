@@ -37,8 +37,6 @@ import com.javafx.experiments.dataapp.model.ProductType;
 import com.javafx.experiments.dataapp.model.Region;
 import dataapppreloader.DataAppPreloader.PreloaderHandoverEvent;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -62,41 +60,31 @@ public class DataApplication extends Application {
     @Override public void init() throws Exception {
         americanRegions.add("All Regions");
         productTypes.add("All Products");
-        registerDataLoadingTask(new Runnable() {
-            @Override public void run() {
-                // fetch available regions in the background
-                Task<Region[]> getRegions = new Task<Region[]>() {
-                    @Override protected Region[] call() throws Exception {
-                        RegionClient regionClient = new RegionClient();
-                        Region[] regions;
-                        regions = regionClient.findAmerican(Region[].class);
-                        regionClient.close();
-                        regions = Arrays.copyOfRange(regions, 0, regions.length-1);
-                        return regions;
-                    }
-                };
-                getRegions.valueProperty().addListener(new ChangeListener<Region[]>() {
-                    @Override public void changed(ObservableValue<? extends Region[]> ov, Region[] t, Region[] t1) {
-                        americanRegions.addAll((Object[])t1);
-                    }
-                });
-                new Thread(getRegions).start();
-                // fetch aviulable product types in the background
-                Task<ProductType[]> getProductTypes = new Task<ProductType[]>(){
-                    @Override protected ProductType[] call() throws Exception {
-                        ProductTypeClient ptClient = new ProductTypeClient();
-                        ProductType[] types = ptClient.findAll(ProductType[].class);
-                        ptClient.close();
-                        return types;
-                    }
-                };
-                getProductTypes.valueProperty().addListener(new ChangeListener<ProductType[]>() {
-                    @Override public void changed(ObservableValue<? extends ProductType[]> ov, ProductType[] t, ProductType[] t1) {
-                        productTypes.addAll((Object[])t1);
-                    }
-                });
-                new Thread(getProductTypes).start();
-            }
+        registerDataLoadingTask(() -> {
+            // fetch available regions in the background
+            var getRegions = new Task<Region[]>() {
+                @Override protected Region[] call() {
+                    RegionClient regionClient = new RegionClient();
+                    Region[] regions;
+                    regions = regionClient.findAmerican(Region[].class);
+                    regionClient.close();
+                    regions = Arrays.copyOfRange(regions, 0, regions.length-1);
+                    return regions;
+                }
+            };
+            getRegions.valueProperty().addListener((ov, t, t1) -> americanRegions.addAll((Object[])t1));
+            new Thread(getRegions).start();
+            // fetch available product types in the background
+            var getProductTypes = new Task<ProductType[]>(){
+                @Override protected ProductType[] call() {
+                    ProductTypeClient ptClient = new ProductTypeClient();
+                    ProductType[] types = ptClient.findAll(ProductType[].class);
+                    ptClient.close();
+                    return types;
+                }
+            };
+            getProductTypes.valueProperty().addListener((ov, t, t1) -> productTypes.addAll((Object[])t1));
+            new Thread(getProductTypes).start();
         });
         // create ui
         root = FXMLLoader.load(DataApplication.class.getResource("dataapp.fxml"));

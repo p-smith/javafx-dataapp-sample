@@ -36,8 +36,6 @@ import com.javafx.experiments.dataapp.simulation.SalesSimulator;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -48,82 +46,61 @@ import javax.servlet.annotation.WebListener;
 import javax.ws.rs.ApplicationPath;
 
 import java.math.BigInteger;
-import java.util.Collections;
+import java.time.Duration;
 import java.util.HashMap;
-import java.util.Map;
-
-import static org.quartz.DateBuilder.IntervalUnit.MILLISECOND;
-import static org.quartz.DateBuilder.futureDate;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
-import static  org.quartz.TriggerBuilder.newTrigger;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @WebListener
 @ApplicationPath("resources")
-public class Application extends ResourceConfig implements ServletContextListener, EntityManagerFactoryHolder {
+public class Application extends ResourceConfig implements ServletContextListener {
 
     private static final String PU_NAME = "DataAppLibraryPU";
-    private static EntityManagerFactory entityManagerFactory;
-    private static Scheduler scheduler;
+    private EntityManagerFactory entityManagerFactory;
+    private ScheduledThreadPoolExecutor scheduler;
 
     public Application() {
+        entityManagerFactory = Persistence.createEntityManagerFactory(PU_NAME);
         packages("com.javafx.experiments.dataapp.server.service");
         register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(Application.this).to(EntityManagerFactoryHolder.class);
-                bindFactory(EMFactory.class).to(EntityManager.class).in(RequestScoped.class);
+                bind(entityManagerFactory).to(EntityManagerFactory.class);
+                bindFactory(EntityManagerSource.class).to(EntityManager.class).in(RequestScoped.class);
             }
         });
     }
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        entityManagerFactory = Persistence.createEntityManagerFactory(PU_NAME);
         initDatabaseIfNeeded();
 
         System.out.println("Starting simulation");
-        try {
-            scheduler = StdSchedulerFactory.getDefaultScheduler();
-            scheduler.scheduleJob(
-                    newJob(GeneralJob.class)
-                        .usingJobData(
-                                new JobDataMap(
-                                        Collections.singletonMap("runnable", new SalesSimulator(entityManagerFactory.createEntityManager()))))
-                        .build(),
-                    newTrigger()
-                        .startAt(futureDate(SalesSimulator.TIME_BETWEEN_SALES, MILLISECOND))
-                        .withSchedule(simpleSchedule()
-                                .withIntervalInMilliseconds(SalesSimulator.TIME_BETWEEN_SALES)
-                                .repeatForever())
-                        .build());
 
-            scheduler.scheduleJob(
-                    newJob(GeneralJob.class)
-                        .usingJobData(
-                                new JobDataMap(
-                                        Collections.singletonMap("runnable", new DailySalesGenerator(entityManagerFactory.createEntityManager()))))
-                        .build(),
-                    newTrigger()
-                        .startAt(futureDate(1000, MILLISECOND))
-                        .withSchedule(simpleSchedule()
-                            .withIntervalInHours(24)
-                            .repeatForever())
-                        .build());
-            scheduler.start();
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
+        scheduler = new ScheduledThreadPoolExecutor(1);
+        scheduler.scheduleWithFixedDelay(
+                new SalesSimulator(entityManagerFactory.createEntityManager()),
+                SalesSimulator.TIME_BETWEEN_SALES,
+                SalesSimulator.TIME_BETWEEN_SALES,
+                TimeUnit.MILLISECONDS
+        );
+        scheduler.scheduleWithFixedDelay(() -> {
+            var em = entityManagerFactory.createEntityManager();
+            new DailySalesGenerator(em).run();
+            em.close();
+        }, 1000, Duration.ofHours(24).toMillis(), TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        try {
-            if (scheduler != null) {
-                scheduler.shutdown(true);
+        if (scheduler != null) {
+            scheduler.shutdown();
+
+            try {
+                scheduler.awaitTermination(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (SchedulerException e) {
-            e.printStackTrace();
         }
 
         if (entityManagerFactory != null) {
@@ -131,13 +108,9 @@ public class Application extends ResourceConfig implements ServletContextListene
         }
     }
 
-    public EntityManagerFactory getEntityManagerFactory() {
-        return entityManagerFactory;
-    }
-
-    private static void initDatabaseIfNeeded() {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        BigInteger count = (BigInteger)em.createNativeQuery("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_name = 'ADDRESS'").getSingleResult();
+    private void initDatabaseIfNeeded() {
+        var em = entityManagerFactory.createEntityManager();
+        var count = (BigInteger)em.createNativeQuery("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_name = 'ADDRESS'").getSingleResult();
 
         if (count.intValue() > 0) {
             System.out.println("Database already initialized");
@@ -147,7 +120,7 @@ public class Application extends ResourceConfig implements ServletContextListene
 
         System.out.println("Initializing database");
 
-        Map<String, String> map = new HashMap<>();
+        var map = new HashMap<String, String>();
         map.put("javax.persistence.schema-generation.database.action", "create");
         Persistence.generateSchema(PU_NAME, map);
         DataAppLoader.loadAll(em);

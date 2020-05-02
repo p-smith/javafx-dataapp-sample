@@ -40,8 +40,6 @@ import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -67,11 +65,10 @@ public class DataAppPreloader extends Preloader  {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
         launch(args);
     }
 
-    @Override public void init() throws Exception {
+    @Override public void init() {
         DEMO_MODE = true;
         root = new StackPane();
         StackPane background = new StackPane();
@@ -81,16 +78,14 @@ public class DataAppPreloader extends Preloader  {
                 DataAppPreloader.class.getResourceAsStream("images/car.png")));
         raceTrack = new RaceTrack();
         root.getChildren().addAll(background, raceTrack, carImageView);
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
-                preloaderScene = new Scene(root,1250,750);
-                preloaderScene.getStylesheets().add(
-                        DataAppPreloader.class.getResource("preloader.css").toExternalForm());
-            }
+        Platform.runLater(() -> {
+            preloaderScene = new Scene(root,1250,750);
+            preloaderScene.getStylesheets().add(
+                    DataAppPreloader.class.getResource("preloader.css").toExternalForm());
         });
     }
     
-    @Override public void start(Stage stage) throws Exception {
+    @Override public void start(Stage stage) {
         stage.setScene(preloaderScene);
         stage.show();
         
@@ -114,7 +109,7 @@ public class DataAppPreloader extends Preloader  {
             }
             // we have finished downloading application, now we are running application
             // init() method, as we have no way of calculating real progress 
-            // simplate pretend progress here
+            // simulate pretend progress here
             simulatorTimeline = new Timeline();
             simulatorTimeline.getKeyFrames().add( 
                     new KeyFrame(Duration.seconds(3), 
@@ -134,7 +129,7 @@ public class DataAppPreloader extends Preloader  {
             root.getChildren().remove(raceTrack);
             // stop simulating progress
             simulatorTimeline.stop();
-            // apply application stylsheet to scene
+            // apply application stylesheet to scene
             preloaderScene.getStylesheets().setAll(event.getCssUrl());
             // enable caching for smooth fade
             appRoot.setCache(true);
@@ -149,9 +144,8 @@ public class DataAppPreloader extends Preloader  {
                     new KeyValue(appRoot.translateYProperty(), 0, Interpolator.EASE_OUT)
                 ),
                 new KeyFrame(
-                    Duration.millis(1500), 
-                    new EventHandler<ActionEvent>() {
-                        @Override public void handle(ActionEvent t) {
+                    Duration.millis(1500),
+                        t -> {
                             // turn off cache as not need any more
                             appRoot.setCache(false);
                             // done animation so start loading data
@@ -159,7 +153,6 @@ public class DataAppPreloader extends Preloader  {
                                 Platform.runLater(task);
                             }
                         }
-                    }
                 )
             );
             fadeOut.play();

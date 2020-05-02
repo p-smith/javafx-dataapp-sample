@@ -1,0 +1,8 @@
+plugins {
+    id 'org.javamodularity.moduleplugin' version '1.6.0'
+}
+
+dependencies {
+    compileOnly 'org.eclipse.persistence:javax.persistence:2.2.1'
+    compileOnly 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
+}
